@@ -1,4 +1,4 @@
-# sep-react
+# sep
 
 [![Generated with nod](https://img.shields.io/badge/generator-nod-2196F3.svg?style=flat-square)](https://github.com/diegohaz/nod)
 [![NPM version](https://img.shields.io/npm/v/sep-react.svg?style=flat-square)](https://npmjs.org/package/sep-react)
@@ -84,43 +84,6 @@ const Element = ({ className, ...props }) => (
 );
 ```
 
-## Pass event handlers
-
-```jsx
-// good
-const Element = props => (
-  <div {...props} />
-);
-
-// bad - not passing onClick
-const Element = ({ onClick, ...props }) => (
-  <div {...props} />
-);
-
-// bad - replacing passed onClick
-const Element = props => (
-  <div {...props} onClick={myFunction} />
-);
-
-// good
-const Element = ({ onClick, ...props }) => (
-  <div onClick={onClick} {...props} />
-);
-
-// good - it's ok to replace
-const Element = props => (
-  <div onClick={myFunction} {...props} />
-);
-
-// good
-const callAll = (...fns) => (...args) => 
-  fns.forEach(fn => fn && fn(...args));
-
-const Element = ({ onClick, ...props }) => (
-  <div onClick={callAll(myFunction, onClick)} {...props} />
-);
-```
-
 ## Append `style`
 
 ```jsx
@@ -142,6 +105,43 @@ const Element = props => (
 // good
 const Element = ({ style, ...props }) => (
   <div style={{ padding: 0, ...style }} {...props} />
+);
+```
+
+## Pass event handlers
+
+```jsx
+// good
+const Element = props => (
+  <div {...props} />
+);
+
+// bad - not passing onClick
+const Element = ({ onClick, ...props }) => (
+  <div {...props} />
+);
+
+// bad - replacing onClick prop
+const Element = props => (
+  <div {...props} onClick={myFunction} />
+);
+
+// good
+const Element = ({ onClick, ...props }) => (
+  <div onClick={onClick} {...props} />
+);
+
+// good - it's ok to replace
+const Element = props => (
+  <div onClick={myFunction} {...props} />
+);
+
+// good
+const callAll = (...fns) => (...args) => 
+  fns.forEach(fn => fn && fn(...args));
+
+const Element = ({ onClick, ...props }) => (
+  <div onClick={callAll(myFunction, onClick)} {...props} />
 );
 ```
 

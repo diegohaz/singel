@@ -1,81 +1,83 @@
 // @flow
 import React from "react";
 import type { ComponentType } from "react";
-import flow from "lodash/flow";
 import { configure, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
+import flow from "lodash/flow";
 import sinon from "sinon";
+
+type TestFn = (Element: ComponentType<any>) => ComponentType<any>;
 
 configure({ adapter: new Adapter() });
 
-const testSingleElement = (A: ComponentType<any>): ComponentType<any> => {
-  const wrapper = mount(<A />);
+const testSingleElement: TestFn = Element => {
+  const wrapper = mount(<Element />);
   const { length } = wrapper.children().children();
   if (length) {
-    throw new Error(`${A.name} should render only one element.`);
+    throw new Error(`${Element.name} should render only one element.`);
   }
-  return A;
+  return Element;
 };
 
-const testChildren = (A: ComponentType<any>): ComponentType<any> => {
+const testChildren: TestFn = Element => {
   // ignore self-closing elements
-  const wrapper = mount(<A>children</A>);
+  const wrapper = mount(<Element>children</Element>);
   if (!wrapper.contains("children")) {
-    throw new Error(`${A.name} should render its children.`);
+    throw new Error(`${Element.name} should render its children.`);
   }
-  return A;
+  return Element;
 };
 
-const testHTMLProps = (A: ComponentType<any>): ComponentType<any> => {
+const testHTMLProps: TestFn = Element => {
   // test every html prop
   // test every svg prop if the component is svg
-  const wrapper = mount(<A id="foo" />);
+  const wrapper = mount(<Element id="foo" />);
   const { length } = wrapper.children().find("[id='foo']");
   if (!length) {
-    throw new Error(`${A.name} should render html props.`);
+    throw new Error(`${Element.name} should render html props.`);
   }
-  return A;
+  return Element;
 };
 
-const testClassName = (A: ComponentType<any>): ComponentType<any> => {
-  const wrapper = mount(<A className="foo" />);
+const testClassName: TestFn = Element => {
+  const wrapper = mount(<Element className="foo" />);
   const { length } = wrapper.children().find(".foo");
   if (!length) {
-    throw new Error(`${A.name} should render className.`);
+    throw new Error(`${Element.name} should render className.`);
   }
-  return A;
+  return Element;
 };
 
-const testEventHandlers = (A: ComponentType<any>): ComponentType<any> => {
+const testStyle: TestFn = Element => {
+  // test ALL style props
+  const wrapper = mount(<Element style={{ padding: 10 }} />);
+  const { padding } = wrapper.getDOMNode().style;
+  if (padding !== "10px") {
+    throw new Error(`${Element.name} should accept inline style via props.`);
+  }
+  return Element;
+};
+
+const testEventHandlers: TestFn = Element => {
   // test all the event handlers, not only onClick
   // test for event arguments
   const onClick = sinon.fake();
-  const wrapper = mount(<A onClick={onClick} />);
+  const wrapper = mount(<Element onClick={onClick} />);
   wrapper.simulate("click");
   if (!onClick.called) {
-    throw new Error(`${A.name} should accept event handlers.`);
+    throw new Error(`${Element.name} should accept event handlers.`);
   }
-  return A;
+  return Element;
 };
 
-const testStyle = (A: ComponentType<any>): ComponentType<any> => {
-  // test ALL style props
-  const wrapper = mount(<A style={{ padding: 10 }} />);
-  const { padding } = wrapper.getDOMNode().style;
-  if (padding !== "10px") {
-    throw new Error(`${A.name} should accept inline style via props.`);
-  }
-  return A;
-};
-
-const testComponent = (A: ComponentType<any>): ComponentType<any> =>
+const testComponent: TestFn = Element =>
   flow(
     testSingleElement,
     testChildren,
     testHTMLProps,
     testClassName,
-    testEventHandlers,
-    testStyle
-  )(A);
+    testStyle,
+    testEventHandlers
+  )(Element);
 
 export default testComponent;
