@@ -39,15 +39,20 @@
     "lint": "{src,test}/*.js",
     "build": "src"
   },
-  "jest": {
-    "testEnvironment": "node"
-  },
   "keywords": [
     "single element pattern",
     "sep",
     "sep-react"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "lodash": "^4.17.10",
+    "raf": "^3.4.0",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0",
+    "sinon": "^5.0.10"
+  },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
@@ -55,15 +60,18 @@
     "babel-jest": "^23.0.1",
     "babel-preset-env": "^1.6.1",
     "babel-preset-flow": "^6.23.0",
+    "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "documentation": "^7.1.0",
     "eslint": "^4.19.1",
-    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-config-airbnb": "^16.1.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-flowtype": "^2.46.1",
     "eslint-plugin-flowtype-errors": "^3.5.1",
     "eslint-plugin-import": "^2.10.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-prettier": "^2.6.0",
+    "eslint-plugin-react": "^7.8.2",
     "flow-bin": "^0.73.0",
     "flow-copy-source": "^1.3.0",
     "jest-cli": "^23.1.0",
