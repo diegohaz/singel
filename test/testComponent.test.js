@@ -23,7 +23,7 @@ describe("children", () => {
     expect(testComponent(Element)).toBe(Element);
   });
 
-  test("good - self-closing element", () => {
+  test("good - void element", () => {
     const Element = ({ children, ...props }) => <img {...props} />;
     expect(testComponent(Element)).toBe(Element);
   });

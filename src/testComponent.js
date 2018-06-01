@@ -20,7 +20,7 @@ const testSingleElement: TestFn = Element => {
 };
 
 const testChildren: TestFn = Element => {
-  // ignore self-closing elements
+  // ignore void elements
   const wrapper = mount(<Element>children</Element>);
   if (!wrapper.contains("children")) {
     throw new Error(`${Element.name} should render its children.`);
