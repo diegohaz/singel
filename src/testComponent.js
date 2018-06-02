@@ -84,10 +84,6 @@ const testHTMLProps: TestFn = Element => {
 
   Object.keys(reactProps).forEach(prop => {
     if (props[prop] !== reactProps[prop]) {
-      // console.log("----------");
-      // console.log(props.charset);
-      // console.log(reactProps[prop]);
-
       throw new Error(
         `${Element.displayName ||
           Element.name} should render html prop (${prop}).`
