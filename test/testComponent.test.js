@@ -7,6 +7,12 @@ describe("single element", () => {
     expect(testComponent(Element)).toBe(Element);
   });
 
+  test("good - composing", () => {
+    const Element = props => <div {...props} />;
+    const Element2 = props => <Element {...props} />;
+    expect(testComponent(Element2)).toBe(Element2);
+  });
+
   test("bad", () => {
     const Element = props => (
       <div {...props}>
@@ -117,6 +123,13 @@ describe("event handlers", () => {
 
   test("bad - not passing onClick", () => {
     const Element = ({ onClick, ...props }) => <div {...props} />;
+    expect(() => testComponent(Element)).toThrow();
+  });
+
+  test("bad - not passing args to onClick", () => {
+    const Element = ({ onClick, ...props }) => (
+      <div onClick={() => onClick()} {...props} />
+    );
     expect(() => testComponent(Element)).toThrow();
   });
 

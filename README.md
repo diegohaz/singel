@@ -20,6 +20,11 @@ const Element = props => (
 const Element = props => (
   <div {...props} />
 );
+
+// good - if Element is good
+const Element2 = props => (
+  <Element {...props} />
+);
 ```
 
 ## Render children
