@@ -9,6 +9,8 @@ import voidElements from "void-elements";
 import { all as cssProps } from "known-css-properties";
 import htmlProps from "react-known-props";
 import ariaProps from "aria-attributes/index.json";
+// $FlowFixMe
+import safeHtmlProps from "react-html-attributes";
 import { findHTMLTags, getHTMLTag, findHTMLTag } from "./utils";
 
 type TestFn = (Element: ComponentType<any>) => ComponentType<any>;
@@ -26,8 +28,13 @@ const styleProps = cssProps
     {}
   );
 
-const reactProps = [...htmlProps, ...ariaProps]
-  .filter(prop => !/^style|className|on[A-Z].+$/.test(prop))
+const reactProps = [...safeHtmlProps["*"], ...ariaProps]
+  .filter(
+    prop =>
+      !/^style|className|allowTransparency|srcLang|suppressContentEditableWarning|capture|marginWidth|marginHeight|classID|is|keyType|keyParams|charSet|dangerouslySetInnerHTML|on[A-Z].+$/.test(
+        prop
+      )
+  )
   .reduce(
     (acc, prop) => ({
       ...acc,
