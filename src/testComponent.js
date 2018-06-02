@@ -19,7 +19,7 @@ const styleProps = cssProps
   .reduce(
     (acc, prop) => ({
       ...acc,
-      [prop]: "foo"
+      [prop]: prop
     }),
     {}
   );
@@ -98,20 +98,24 @@ const testStyle: TestFn = Element => {
   const originalWrapper = mount(<Element />);
   if (!getHTMLTag(originalWrapper)) return Element;
   const originalStyle = findHTMLTag(originalWrapper).prop("style") || {};
-  const style = omit(styleProps, Object.keys(originalStyle));
-  const wrapper = mount(<Element style={style} />);
-  const renderedStyle = findHTMLTag(wrapper).prop("style");
 
-  Object.keys(style).forEach(prop => {
-    if (renderedStyle[prop] !== style[prop]) {
+  const wrapper = mount(<Element style={styleProps} />);
+  const renderedStyle = findHTMLTag(wrapper).prop("style") || {};
+
+  Object.keys(styleProps).forEach(prop => {
+    if (renderedStyle[prop] !== styleProps[prop]) {
       throw new Error(
         `${Element.name} should accept inline style (${prop}) via props.`
       );
     }
   });
 
+  const styleWithoutOriginalKeys = omit(styleProps, Object.keys(originalStyle));
+  const thirdWrapper = mount(<Element style={styleWithoutOriginalKeys} />);
+  const thirdRenderedStyle = findHTMLTag(thirdWrapper).prop("style") || {};
+
   Object.keys(originalStyle).forEach(prop => {
-    if (!renderedStyle[prop]) {
+    if (!thirdRenderedStyle[prop]) {
       throw new Error(
         `${Element.name} should append inline style via props, not replace it.`
       );

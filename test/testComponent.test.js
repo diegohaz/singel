@@ -112,6 +112,13 @@ describe("style", () => {
     expect(testComponent(Element)).toBe(Element);
   });
 
+  test("bad - override style props", () => {
+    const Element = ({ style, ...props }) => (
+      <div style={{ ...style, padding: 10 }} {...props} />
+    );
+    expect(() => testComponent(Element)).toThrow();
+  });
+
   test("bad - not rendering style", () => {
     const Element = ({ style, ...props }) => <div {...props} />;
     expect(() => testComponent(Element)).toThrow();
