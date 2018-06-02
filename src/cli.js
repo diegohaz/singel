@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { join } from "path";
 import meow from "meow";
 import { JSDOM } from "jsdom";
