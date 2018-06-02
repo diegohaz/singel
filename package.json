@@ -13,6 +13,9 @@
   "engines": {
     "node": ">=6"
   },
+  "bin": {
+    "sep": "dist/cli.js"
+  },
   "files": [
     "dist"
   ],
@@ -44,10 +47,15 @@
     "sep-react"
   ],
   "dependencies": {
+    "aria-attributes": "^1.2.3",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+    "babel-register": "^6.26.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
+    "jsdom": "^11.11.0",
     "known-css-properties": "^0.6.1",
     "lodash": "^4.17.10",
+    "meow": "^5.0.0",
     "raf": "^3.4.0",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",

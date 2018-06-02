@@ -34,10 +34,15 @@ const testSingleElement: TestFn = Element => {
 };
 
 const testChildren: TestFn = Element => {
-  const wrapper = mount(<Element>children</Element>);
+  const wrapper = mount(<Element />);
   const isVoidElement = voidElements[getHTMLTag(wrapper)];
-  if (!isVoidElement && !wrapper.contains("children")) {
-    throw new Error(`${Element.name} should render its children.`);
+  if (!isVoidElement && getHTMLTag(wrapper)) {
+    wrapper.setProps({ children: "children" });
+    if (!wrapper.contains("children")) {
+      throw new Error(
+        `${Element.displayName || Element.name} should render its children.`
+      );
+    }
   }
   return Element;
 };
@@ -46,15 +51,18 @@ const testHTMLProps: TestFn = Element => {
   // test every html prop
   // test every svg prop if the component is svg
   const wrapper = mount(<Element id="foo" />);
-  const { length } = findHTMLTag(wrapper).find("[id='foo']");
-  if (!length) {
-    throw new Error(`${Element.name} should render html props.`);
+  const tag = getHTMLTag(wrapper);
+  if (tag && !findHTMLTag(wrapper).find("[id='foo']").length) {
+    throw new Error(
+      `${Element.displayName || Element.name} should render html props.`
+    );
   }
   return Element;
 };
 
 const testClassName: TestFn = Element => {
   const originalWrapper = mount(<Element />);
+  if (!getHTMLTag(originalWrapper)) return Element;
   const [originalClassName] = (
     findHTMLTag(originalWrapper).prop("className") || ""
   ).split(" ");
@@ -77,6 +85,7 @@ const testClassName: TestFn = Element => {
 
 const testStyle: TestFn = Element => {
   const originalWrapper = mount(<Element />);
+  if (!getHTMLTag(originalWrapper)) return Element;
   const originalStyle = findHTMLTag(originalWrapper).prop("style") || {};
   const style = omit(styleProps, Object.keys(originalStyle));
   const wrapper = mount(<Element style={style} />);
@@ -106,9 +115,12 @@ const testEventHandlers: TestFn = Element => {
   // test for event arguments
   const onClick = sinon.fake();
   const wrapper = mount(<Element onClick={onClick} />);
+  if (!getHTMLTag(wrapper)) return Element;
   wrapper.simulate("click");
-  if (!onClick.called) {
-    throw new Error(`${Element.name} should accept event handlers.`);
+  if (!onClick.called && !wrapper.getDOMNode().disabled) {
+    throw new Error(
+      `${Element.displayName || Element.name} should accept event handlers.`
+    );
   }
   return Element;
 };
