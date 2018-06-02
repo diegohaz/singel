@@ -1,6 +1,24 @@
 import React from "react";
 import testComponent from "../src/testComponent";
 
+// eslint-disable-next-line no-console
+console.error = jest.fn();
+
+describe("errors", () => {
+  test("good", () => {
+    const Element = ({ getId, ...props }) => {
+      const id = getId ? getId() : "id";
+      return <div id={id} {...props} />;
+    };
+    expect(testComponent(Element)).toBe(Element);
+  });
+
+  test("bad", () => {
+    const Element = ({ getId, ...props }) => <div id={getId()} {...props} />;
+    expect(() => testComponent(Element)).toThrow();
+  });
+});
+
 describe("single element", () => {
   test("good", () => {
     const Element = props => <div {...props} />;

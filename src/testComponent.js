@@ -24,11 +24,22 @@ const styleProps = cssProps
     {}
   );
 
+const testErrors: TestFn = Element => {
+  try {
+    mount(<Element />);
+  } catch (e) {
+    throw new Error(`${Element.displayName || Element.name} should not break.`);
+  }
+  return Element;
+};
+
 const testSingleElement: TestFn = Element => {
   const wrapper = mount(<Element />);
   const { length } = findHTMLTags(wrapper);
   if (length > 1) {
-    throw new Error(`${Element.name} should render only one element.`);
+    throw new Error(
+      `${Element.displayName || Element.name} should render only one element.`
+    );
   }
   return Element;
 };
@@ -127,6 +138,7 @@ const testEventHandlers: TestFn = Element => {
 
 const testComponent: TestFn = Element =>
   flow(
+    testErrors,
     testSingleElement,
     testChildren,
     testHTMLProps,
