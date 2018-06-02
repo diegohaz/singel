@@ -7,6 +7,11 @@ describe("single element", () => {
     expect(testComponent(Element)).toBe(Element);
   });
 
+  test("good - component renders null", () => {
+    const Element = () => null;
+    expect(testComponent(Element)).toBe(Element);
+  });
+
   test("good - composing", () => {
     const Element = props => <div {...props} />;
     const Element2 = props => <Element {...props} />;
