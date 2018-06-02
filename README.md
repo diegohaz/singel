@@ -1,10 +1,10 @@
-# sep
+# singel
 
 [![Generated with nod](https://img.shields.io/badge/generator-nod-2196F3.svg?style=flat-square)](https://github.com/diegohaz/nod)
-[![NPM version](https://img.shields.io/npm/v/sep-react.svg?style=flat-square)](https://npmjs.org/package/sep-react)
-[![Build Status](https://img.shields.io/travis/diegohaz/sep/master.svg?style=flat-square)](https://travis-ci.org/diegohaz/sep) [![Coverage Status](https://img.shields.io/codecov/c/github/diegohaz/sep/master.svg?style=flat-square)](https://codecov.io/gh/diegohaz/sep/branch/master)
+[![NPM version](https://img.shields.io/npm/v/singel.svg?style=flat-square)](https://npmjs.org/package/singel)
+[![Build Status](https://img.shields.io/travis/diegohaz/singel/master.svg?style=flat-square)](https://travis-ci.org/diegohaz/singel) [![Coverage Status](https://img.shields.io/codecov/c/github/diegohaz/singel/master.svg?style=flat-square)](https://codecov.io/gh/diegohaz/singel/branch/master)
 
-Test React components using the Single Element Pattern (SEP)
+Test React components using the Single Element Pattern (Singel)
 
 ## Render only one element
 

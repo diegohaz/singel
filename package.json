@@ -1,9 +1,9 @@
 {
-  "name": "sep-react",
+  "name": "singel",
   "version": "0.0.1",
-  "description": "Test React components using the Single Element Pattern (SEP)",
+  "description": "Test React components using the Single Element Pattern (Singel)",
   "license": "MIT",
-  "repository": "diegohaz/sep",
+  "repository": "diegohaz/singel",
   "main": "dist/index.js",
   "author": {
     "name": "Diego Haz",
@@ -14,7 +14,7 @@
     "node": ">=6"
   },
   "bin": {
-    "sep": "dist/cli.js"
+    "singel": "dist/cli.js"
   },
   "files": [
     "dist"
@@ -43,8 +43,8 @@
   },
   "keywords": [
     "single element pattern",
-    "sep",
-    "sep-react"
+    "singel",
+    "react"
   ],
   "dependencies": {
     "aria-attributes": "^1.2.3",
