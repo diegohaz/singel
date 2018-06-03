@@ -22,7 +22,8 @@ const run = paths => {
   paths.forEach(path => {
     const p = isAbsolute(path) ? path : join(process.cwd(), path);
     const { default: Component } = require(p);
-    testComponent(Component);
+    const ret = testComponent(Component);
+    console.log(Object.keys(ret));
   });
 };
 

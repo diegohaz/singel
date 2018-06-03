@@ -82,14 +82,20 @@ const testHTMLProps: TestFn = Element => {
   if (!getHTMLTag(wrapper)) return Element;
   const props = findHTMLTag(wrapper).props();
 
+  const htmlPropErrors = {
+    render: []
+  };
+
   Object.keys(reactProps).forEach(prop => {
     if (props[prop] !== reactProps[prop]) {
-      throw new Error(
+      htmlPropErrors.render.push(
         `${Element.displayName ||
           Element.name} should render html prop (${prop}).`
       );
     }
   });
+
+  Element.htmlPropErrors = htmlPropErrors;
   return Element;
 };
 
@@ -103,16 +109,22 @@ const testClassName: TestFn = Element => {
   const className = findHTMLTag(wrapper).prop("className") || "";
   const classNames = className.split(" ");
 
+  const classNameErrors = {
+    render: [],
+    override: []
+  };
+
   if (!classNames.includes("bar")) {
-    throw new Error(`${Element.name} should render className.`);
+    classNameErrors.render.push(`${Element.name} should render className.`);
   }
 
   if (originalClassName && !classNames.includes(originalClassName)) {
-    throw new Error(
+    classNameErrors.override.push(
       `${Element.name} should append className, not override it.`
     );
   }
 
+  Element.classNameErrors = classNameErrors;
   return Element;
 };
 
@@ -124,9 +136,14 @@ const testStyle: TestFn = Element => {
   const wrapper = mount(<Element style={styleProps} />);
   const renderedStyle = findHTMLTag(wrapper).prop("style") || {};
 
+  const styleErrors = {
+    shouldAccept: [],
+    shouldAppend: []
+  };
+
   Object.keys(styleProps).forEach(prop => {
     if (renderedStyle[prop] !== styleProps[prop]) {
-      throw new Error(
+      styleErrors.shouldAccept.push(
         `${Element.name} should accept inline style (${prop}) via props.`
       );
     }
@@ -138,12 +155,13 @@ const testStyle: TestFn = Element => {
 
   Object.keys(originalStyle).forEach(prop => {
     if (!thirdRenderedStyle[prop]) {
-      throw new Error(
+      styleErrors.shouldAppend.push(
         `${Element.name} should append inline style via props, not replace it.`
       );
     }
   });
 
+  Element.styleErrors = styleErrors;
   return Element;
 };
 
@@ -156,6 +174,11 @@ const testEventHandlers: TestFn = Element => {
     {}
   );
 
+  const eventHandlerErrors = {
+    shouldAccept: [],
+    shouldPassSynthetic: []
+  };
+
   const wrapper = mount(<Element {...eventHandlers} />);
   if (!getHTMLTag(wrapper)) return Element;
   Object.keys(eventHandlers).forEach(prop => {
@@ -164,21 +187,24 @@ const testEventHandlers: TestFn = Element => {
     wrapper.simulate(lowercaseEvent);
 
     if (!eventHandlers[prop].called) {
-      throw new Error(
+      eventHandlerErrors.shouldAccept.push(
         `${Element.displayName ||
           Element.name} should accept event handler (${prop}).`
       );
     }
 
-    const [arg] = eventHandlers[prop].getCall(0).args;
+    const arg =
+      eventHandlers[prop].getCall(0) && eventHandlers[prop].getCall(0).args[0];
 
     if (!arg || arg.constructor.name !== "SyntheticEvent") {
-      throw new Error(
+      eventHandlerErrors.shouldPassSynthetic.push(
         `${Element.displayName ||
           Element.name} should pass SyntheticEvent to ${prop}.`
       );
     }
   });
+
+  Element.eventHandlerErrors = eventHandlerErrors;
   return Element;
 };
 
