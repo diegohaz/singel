@@ -39,48 +39,40 @@ const format = result => {
   const print = console.log;
 
   Object.keys(result).forEach(errorCategory => {
-    indent(
-      "\n",
-      "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ",
-      "\n",
-      `    ${chalk.underline(upperCase(errorCategory))}    `,
-      "\n",
-      "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ "
-    );
+    print("");
+    print(chalk.underline(upperCase(errorCategory)));
 
     Object.keys(result[errorCategory]).forEach(errorType => {
-      const prettyType = startCase(errorType);
-      const total = result[errorCategory][errorType].length;
-      const max = 5;
+      const errorTypeTitle = startCase(errorType);
+      const totalErrors = result[errorCategory][errorType].length;
+      const maxErrorsToShow = 5;
+      const typeTitleLine = totalErrors
+        ? `${errorTypeTitle} (${red(totalErrors)} errors)`
+        : errorTypeTitle;
       const errorsToPrint =
-        total > max
-          ? result[errorCategory][errorType].slice(0, max)
+        totalErrors > maxErrorsToShow
+          ? result[errorCategory][errorType].slice(0, maxErrorsToShow)
           : result[errorCategory][errorType];
 
-      indent(
-        "\n",
-        `${red(total || "")}`,
-        `  ${total ? red(prettyType) : prettyType}  `,
-        "\n"
-      );
       indent();
+      indent(typeTitleLine);
 
-      if (total) {
+      if (totalErrors) {
         errorsToPrint.forEach(error => print(red(`✘ ${error}`)));
 
-        if (errorsToPrint.length !== total) {
-          print(orange(`...and ${total - max} more errors.`));
+        if (errorsToPrint.length !== totalErrors) {
+          print(orange(`...and ${totalErrors - maxErrorsToShow} more errors.`));
         }
       } else {
         print(green(`✔︎ None`));
       }
 
-      outdent("\n");
+      outdent();
       outdent();
     });
-    outdent("\n\n");
   });
-  print("\n\n");
+  // outdent();
+  print("\n");
 };
 
 format(run(cli.input));

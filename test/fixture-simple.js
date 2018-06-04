@@ -2,7 +2,7 @@ import React from "react";
 
 // eslint-disable-next-line
 const simpleFixture = ({ children, style, ...props }) => (
-  <div>{children}</div>
+  <div {...props}>{children}</div>
 );
 
 export default simpleFixture;
