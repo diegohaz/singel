@@ -65,7 +65,7 @@ const format = result => {
           print(orange(`...and ${totalErrors - maxErrorsToShow} more errors.`));
         }
       } else {
-        print(green(`✔︎ None`));
+        print(green(`✔︎ OK`));
       }
 
       outdent();
