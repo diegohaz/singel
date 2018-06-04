@@ -34,6 +34,7 @@ const format = result => {
   const red = chalk.rgb(233, 25, 102);
   const orange = chalk.rgb(233, 105, 52);
   const green = chalk.rgb(103, 213, 2);
+  const gray = chalk.hex("#979797");
   const indent = console.group;
   const outdent = console.groupEnd;
   const print = console.log;
@@ -55,7 +56,7 @@ const format = result => {
           : result[errorCategory][errorType];
 
       indent();
-      indent(typeTitleLine);
+      indent(gray(typeTitleLine));
 
       if (totalErrors) {
         errorsToPrint.forEach(error => print(red(`✘ ${error}`)));
@@ -71,7 +72,6 @@ const format = result => {
       outdent();
     });
   });
-  // outdent();
   print("\n");
 };
 
