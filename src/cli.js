@@ -3,8 +3,8 @@ import { join, isAbsolute } from "path";
 import meow from "meow";
 import { JSDOM } from "jsdom";
 import { upperCase, startCase } from "lodash";
-import testComponent from ".";
 import chalk from "chalk";
+import testComponent from ".";
 
 const { window } = new JSDOM("<!doctype html><html><body></body></html>");
 global.window = window;
