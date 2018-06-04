@@ -176,7 +176,7 @@ const testEventHandlers: TestFn = Element => {
 
   const eventHandlerErrors = {
     shouldAccept: [],
-    shouldPassSynthetic: []
+    shouldPass: []
   };
 
   const wrapper = mount(<Element {...eventHandlers} />);
@@ -197,7 +197,7 @@ const testEventHandlers: TestFn = Element => {
       eventHandlers[prop].getCall(0) && eventHandlers[prop].getCall(0).args[0];
 
     if (!arg || arg.constructor.name !== "SyntheticEvent") {
-      eventHandlerErrors.shouldPassSynthetic.push(
+      eventHandlerErrors.shouldPass.push(
         `${Element.displayName ||
           Element.name} should pass SyntheticEvent to ${prop}.`
       );

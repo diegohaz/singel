@@ -30,35 +30,57 @@ const run = paths => {
   return result;
 };
 
-const print = result => {
+const format = result => {
+  const red = chalk.rgb(233, 25, 102);
+  const orange = chalk.rgb(233, 105, 52);
+  const green = chalk.rgb(103, 213, 2);
+  const indent = console.group;
+  const outdent = console.groupEnd;
+  const print = console.log;
+
   Object.keys(result).forEach(errorCategory => {
-    const prettyCategory = upperCase(errorCategory);
-    console.group(
+    indent(
       "\n",
-      "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ",
+      "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ",
       "\n",
-      `***    ${prettyCategory}    ***`,
+      `    ${chalk.underline(upperCase(errorCategory))}    `,
       "\n",
-      "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ "
+      "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ "
     );
 
     Object.keys(result[errorCategory]).forEach(errorType => {
       const prettyType = startCase(errorType);
-      console.group("\n", `*  ${prettyType}  *`, "\n");
-      console.group();
+      const total = result[errorCategory][errorType].length;
+      const max = 5;
+      const errorsToPrint =
+        total > max
+          ? result[errorCategory][errorType].slice(0, max)
+          : result[errorCategory][errorType];
 
-      if (result[errorCategory][errorType].length) {
-        result[errorCategory][errorType].forEach(error => console.log(error));
+      indent(
+        "\n",
+        `${red(total || "")}`,
+        `  ${total ? red(prettyType) : prettyType}  `,
+        "\n"
+      );
+      indent();
+
+      if (total) {
+        errorsToPrint.forEach(error => print(red(`✘ ${error}`)));
+
+        if (errorsToPrint.length !== total) {
+          print(orange(`...and ${total - max} more errors.`));
+        }
       } else {
-        console.log(`✔︎ None`);
+        print(green(`✔︎ None`));
       }
 
-      console.groupEnd("\n");
-      console.groupEnd();
+      outdent("\n");
+      outdent();
     });
-    console.groupEnd("\n\n");
+    outdent("\n\n");
   });
-  console.log("\n\n");
+  print("\n\n");
 };
 
-print(run(cli.input));
+format(run(cli.input));
