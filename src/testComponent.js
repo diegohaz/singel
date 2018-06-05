@@ -17,6 +17,8 @@ type TestFn = (Element: ComponentType<any>) => ComponentType<any>;
 
 configure({ adapter: new Adapter() });
 
+const errorReport = {};
+
 const styleProps = cssProps
   .filter(prop => !/^-/.test(prop))
   .map(camelCase)
@@ -56,7 +58,7 @@ const testErrors: TestFn = Element => {
     );
   }
 
-  Element.breakTest = breakTest;
+  errorReport.breakTest = breakTest;
   return Element;
 };
 
@@ -72,7 +74,7 @@ const testSingleElement: TestFn = Element => {
       `${Element.displayName || Element.name} should render only one element.`
     );
   }
-  Element.singleElementTest = singleElementTest;
+  errorReport.singleElementTest = singleElementTest;
   return Element;
 };
 
@@ -92,7 +94,7 @@ const testChildren: TestFn = Element => {
     }
   }
 
-  Element.childrenTest = childrenTest;
+  errorReport.childrenTest = childrenTest;
   return Element;
 };
 
@@ -114,7 +116,7 @@ const testHTMLProps: TestFn = Element => {
     }
   });
 
-  Element.htmlPropsTest = htmlPropsTest;
+  errorReport.htmlPropsTest = htmlPropsTest;
   return Element;
 };
 
@@ -142,7 +144,7 @@ const testClassName: TestFn = Element => {
     );
   }
 
-  Element.classNameTest = classNameTest;
+  errorReport.classNameTest = classNameTest;
   return Element;
 };
 
@@ -179,7 +181,7 @@ const testStyle: TestFn = Element => {
     }
   });
 
-  Element.stylePropsTest = stylePropsTest;
+  errorReport.stylePropsTest = stylePropsTest;
   return Element;
 };
 
@@ -192,7 +194,7 @@ const testEventHandlers: TestFn = Element => {
     {}
   );
 
-  const eventHandlerTest = {
+  const eventHandlersTest = {
     shouldAccept: [],
     shouldPass: []
   };
@@ -205,7 +207,7 @@ const testEventHandlers: TestFn = Element => {
     wrapper.simulate(lowercaseEvent);
 
     if (!eventHandlers[prop].called) {
-      eventHandlerTest.shouldAccept.push(
+      eventHandlersTest.shouldAccept.push(
         `${Element.displayName ||
           Element.name} should accept event handler (${prop}).`
       );
@@ -215,16 +217,18 @@ const testEventHandlers: TestFn = Element => {
       eventHandlers[prop].getCall(0) && eventHandlers[prop].getCall(0).args[0];
 
     if (!arg || arg.constructor.name !== "SyntheticEvent") {
-      eventHandlerTest.shouldPass.push(
+      eventHandlersTest.shouldPass.push(
         `${Element.displayName ||
           Element.name} should pass SyntheticEvent to ${prop}.`
       );
     }
   });
 
-  Element.eventHandlerTest = eventHandlerTest;
+  errorReport.eventHandlersTest = eventHandlersTest;
   return Element;
 };
+
+const errorReporter = () => errorReport;
 
 const testComponent: TestFn = Element =>
   flow(
@@ -234,7 +238,8 @@ const testComponent: TestFn = Element =>
     testHTMLProps,
     testClassName,
     testStyle,
-    testEventHandlers
+    testEventHandlers,
+    errorReporter
   )(Element);
 
 export default testComponent;
