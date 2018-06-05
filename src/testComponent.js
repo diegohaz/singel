@@ -17,6 +17,8 @@ type TestFn = (Element: ComponentType<any>) => ComponentType<any>;
 
 configure({ adapter: new Adapter() });
 
+const errorReport = {};
+
 const styleProps = cssProps
   .filter(prop => !/^-/.test(prop))
   .map(camelCase)
@@ -44,36 +46,55 @@ const reactProps = [...safeHtmlProps["*"], ...ariaProps]
   );
 
 const testErrors: TestFn = Element => {
+  const breakTest = {
+    doesNotBreak: []
+  };
+
   try {
     mount(<Element />);
   } catch (e) {
-    throw new Error(`${Element.displayName || Element.name} should not break.`);
+    breakTest.doesNotBreak.push(
+      `${Element.displayName || Element.name} should not break.`
+    );
   }
+
+  errorReport.breakTest = breakTest;
   return Element;
 };
 
 const testSingleElement: TestFn = Element => {
   const wrapper = mount(<Element />);
   const { length } = findHTMLTags(wrapper);
+  const singleElementTest = {
+    render: []
+  };
+
   if (length > 1) {
-    throw new Error(
+    singleElementTest.render.push(
       `${Element.displayName || Element.name} should render only one element.`
     );
   }
+  errorReport.singleElementTest = singleElementTest;
   return Element;
 };
 
 const testChildren: TestFn = Element => {
   const wrapper = mount(<Element />);
   const isVoidElement = voidElements[getHTMLTag(wrapper)];
+  const childrenTest = {
+    render: []
+  };
+
   if (!isVoidElement && getHTMLTag(wrapper)) {
     wrapper.setProps({ children: "children" });
     if (!wrapper.contains("children")) {
-      throw new Error(
+      childrenTest.render.push(
         `${Element.displayName || Element.name} should render its children.`
       );
     }
   }
+
+  errorReport.childrenTest = childrenTest;
   return Element;
 };
 
@@ -82,14 +103,20 @@ const testHTMLProps: TestFn = Element => {
   if (!getHTMLTag(wrapper)) return Element;
   const props = findHTMLTag(wrapper).props();
 
+  const htmlPropsTest = {
+    render: []
+  };
+
   Object.keys(reactProps).forEach(prop => {
     if (props[prop] !== reactProps[prop]) {
-      throw new Error(
+      htmlPropsTest.render.push(
         `${Element.displayName ||
           Element.name} should render html prop (${prop}).`
       );
     }
   });
+
+  errorReport.htmlPropsTest = htmlPropsTest;
   return Element;
 };
 
@@ -102,17 +129,22 @@ const testClassName: TestFn = Element => {
   const wrapper = mount(<Element className="bar" />);
   const className = findHTMLTag(wrapper).prop("className") || "";
   const classNames = className.split(" ");
+  const classNameTest = {
+    render: [],
+    override: []
+  };
 
   if (!classNames.includes("bar")) {
-    throw new Error(`${Element.name} should render className.`);
+    classNameTest.render.push(`${Element.name} should render className.`);
   }
 
   if (originalClassName && !classNames.includes(originalClassName)) {
-    throw new Error(
+    classNameTest.override.push(
       `${Element.name} should append className, not override it.`
     );
   }
 
+  errorReport.classNameTest = classNameTest;
   return Element;
 };
 
@@ -124,9 +156,14 @@ const testStyle: TestFn = Element => {
   const wrapper = mount(<Element style={styleProps} />);
   const renderedStyle = findHTMLTag(wrapper).prop("style") || {};
 
+  const stylePropsTest = {
+    shouldAccept: [],
+    shouldAppend: []
+  };
+
   Object.keys(styleProps).forEach(prop => {
     if (renderedStyle[prop] !== styleProps[prop]) {
-      throw new Error(
+      stylePropsTest.shouldAccept.push(
         `${Element.name} should accept inline style (${prop}) via props.`
       );
     }
@@ -138,12 +175,13 @@ const testStyle: TestFn = Element => {
 
   Object.keys(originalStyle).forEach(prop => {
     if (!thirdRenderedStyle[prop]) {
-      throw new Error(
+      stylePropsTest.shouldAppend.push(
         `${Element.name} should append inline style via props, not replace it.`
       );
     }
   });
 
+  errorReport.stylePropsTest = stylePropsTest;
   return Element;
 };
 
@@ -156,6 +194,11 @@ const testEventHandlers: TestFn = Element => {
     {}
   );
 
+  const eventHandlersTest = {
+    shouldAccept: [],
+    shouldPass: []
+  };
+
   const wrapper = mount(<Element {...eventHandlers} />);
   if (!getHTMLTag(wrapper)) return Element;
   Object.keys(eventHandlers).forEach(prop => {
@@ -164,23 +207,28 @@ const testEventHandlers: TestFn = Element => {
     wrapper.simulate(lowercaseEvent);
 
     if (!eventHandlers[prop].called) {
-      throw new Error(
+      eventHandlersTest.shouldAccept.push(
         `${Element.displayName ||
           Element.name} should accept event handler (${prop}).`
       );
     }
 
-    const [arg] = eventHandlers[prop].getCall(0).args;
+    const arg =
+      eventHandlers[prop].getCall(0) && eventHandlers[prop].getCall(0).args[0];
 
     if (!arg || arg.constructor.name !== "SyntheticEvent") {
-      throw new Error(
+      eventHandlersTest.shouldPass.push(
         `${Element.displayName ||
           Element.name} should pass SyntheticEvent to ${prop}.`
       );
     }
   });
+
+  errorReport.eventHandlersTest = eventHandlersTest;
   return Element;
 };
+
+const errorReporter = () => errorReport;
 
 const testComponent: TestFn = Element =>
   flow(
@@ -190,7 +238,8 @@ const testComponent: TestFn = Element =>
     testHTMLProps,
     testClassName,
     testStyle,
-    testEventHandlers
+    testEventHandlers,
+    errorReporter
   )(Element);
 
 export default testComponent;

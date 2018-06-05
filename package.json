@@ -21,6 +21,7 @@
   ],
   "scripts": {
     "test": "jest",
+    "fixture": "./node_modules/.bin/babel-node src/cli.js test/fixture-simple.js",
     "coverage": "npm test -- --coverage",
     "postcoverage": "opn coverage/lcov-report/index.html",
     "lint": "eslint src test",
@@ -50,6 +51,7 @@
     "aria-attributes": "^1.2.3",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "babel-register": "^6.26.0",
+    "chalk": "^2.4.1",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "jsdom": "^11.11.0",
