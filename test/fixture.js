@@ -1,8 +1,8 @@
 import React from "react";
 
 // eslint-disable-next-line
-const Fixtura = ({ children, ...props }) => (
+const Fixture = ({ children, ...props }) => (
   <div {...props}>{children}</div>
 );
 
-export default Fixtura;
+export default Fixture;

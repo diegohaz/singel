@@ -1,6 +1,6 @@
 import React from "react";
 import { camelCase } from "lodash";
-import testComponent from "../src/testComponent";
+import testComponent from "../src/Tester";
 
 // eslint-disable-next-line no-console
 console.error = jest.fn();
