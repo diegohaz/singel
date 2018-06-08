@@ -4,11 +4,11 @@
 [![NPM version](https://img.shields.io/npm/v/singel.svg?style=flat-square)](https://npmjs.org/package/singel)
 [![Build Status](https://img.shields.io/travis/diegohaz/singel/master.svg?style=flat-square)](https://travis-ci.org/diegohaz/singel) [![Coverage Status](https://img.shields.io/codecov/c/github/diegohaz/singel/master.svg?style=flat-square)](https://codecov.io/gh/diegohaz/singel/branch/master)
 
-<img src="https://user-images.githubusercontent.com/3068563/41149499-19878ab6-6ae2-11e8-85a2-f880fd65de7c.png" alt="Example" />
-
 **Single Element Pattern** (Singel) is a set of rules/best practices to create consistent, reliable and maintainable components in React and other component-based libraries. This is based on the idea that the building blocks of an application should resemble as most as possible native HTML elements. [**Read full article**](#coming-soon)
 
 This repo is a CLI tool for checking whether React components conform to the Singel pattern.
+
+<img src="https://user-images.githubusercontent.com/3068563/41149499-19878ab6-6ae2-11e8-85a2-f880fd65de7c.png" alt="Example" />
 
 ## Installation
 
