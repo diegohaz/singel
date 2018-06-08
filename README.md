@@ -8,7 +8,9 @@
 
 This repo is a CLI tool for checking whether React components conform to the Singel pattern.
 
-<img src="https://user-images.githubusercontent.com/3068563/41149499-19878ab6-6ae2-11e8-85a2-f880fd65de7c.png" alt="Example" />
+<br>
+<img src="https://user-images.githubusercontent.com/3068563/41152822-37f0d24c-6aeb-11e8-82cb-3bc35d9b1528.png" alt="Example" />
+<br><br>
 
 ## Installation
 
