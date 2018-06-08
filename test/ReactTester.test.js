@@ -1,12 +1,12 @@
 import React from "react";
-import Tester from "../src/Tester";
+import ReactTester from "../src/ReactTester";
 
 // eslint-disable-next-line no-console
 console.error = jest.fn();
 
 const expectError = (element, methodName = "run", not = false) => {
   const listener = jest.fn();
-  const tester = new Tester(element);
+  const tester = new ReactTester(element);
   tester.on("error", listener);
   tester[methodName]();
   if (not) {

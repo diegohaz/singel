@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 import { resolve, relative, isAbsolute } from "path";
-import transformES2015ModulesCommonJS from "babel-plugin-transform-es2015-modules-commonjs";
-import transformRequireStub from "babel-plugin-transform-require-stub";
 import meow from "meow";
 import glob from "glob";
-import Tester from "./Tester";
+import ReactTester from "./ReactTester";
 import Logger from "./Logger";
+import babelConfig from "./babelConfig";
 
 const cli = meow(
   `
@@ -31,20 +30,7 @@ const cli = meow(
 const run = (paths, { ignore }) => {
   Logger.lineBreak();
 
-  require("babel-register")({
-    plugins: [
-      transformES2015ModulesCommonJS,
-      [
-        transformRequireStub,
-        {
-          extensions: [".css", ".scss", ".sass"],
-          defaultStub: {
-            value: {}
-          }
-        }
-      ]
-    ]
-  });
+  require("babel-register")(babelConfig);
 
   const realPaths = paths.reduce(
     (acc, path) => [...acc, ...glob.sync(path, { ignore, nodir: true })],
@@ -64,7 +50,7 @@ const run = (paths, { ignore }) => {
     const absolutePath = isAbsolute(path) ? path : resolve(process.cwd(), path);
     const relativePath = relative(process.cwd(), absolutePath);
     const { default: Element } = require(absolutePath);
-    const tester = new Tester(Element);
+    const tester = new ReactTester(Element);
     const logger = new Logger(Element, relativePath);
 
     logger.start();

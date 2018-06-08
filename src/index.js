@@ -1,3 +1,3 @@
-import Tester from "./Tester";
+import ReactTester from "./ReactTester";
 
-export default Tester;
+export { ReactTester };
