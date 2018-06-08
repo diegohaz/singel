@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "test": "jest",
-    "test:fixture": "babel-node src/cli.js test/fixture.js",
+    "test:cli": "babel-node src/cli.js test/fixture.js",
     "coverage": "npm test -- --coverage",
     "postcoverage": "opn coverage/lcov-report/index.html",
     "lint": "eslint src test",
