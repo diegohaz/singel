@@ -1,4 +1,4 @@
-# <img src="logo.svg" width="200" alt="singel" />
+# <img src="logo/logo.png" width="200" alt="singel" />
 
 [![Generated with nod](https://img.shields.io/badge/generator-nod-2196F3.svg?style=flat-square)](https://github.com/diegohaz/nod)
 [![NPM version](https://img.shields.io/npm/v/singel.svg?style=flat-square)](https://npmjs.org/package/singel)
