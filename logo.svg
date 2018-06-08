@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="315px" height="315px" viewBox="0 0 315 315" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>Untitled</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle" stroke="#000000" stroke-width="5" fill="#FFFFFF" x="2.5" y="2.5" width="310" height="310"></rect>
+        <text id="Singel" font-family="LucidaGrande-Bold, Lucida Grande" font-size="72" font-weight="bold">
+            <tspan x="24" y="178" fill="#2196F3">Sing</tspan>
+            <tspan x="183.328125" y="178" fill="#E91E63">el</tspan>
+        </text>
+        <text id="0" font-family="Menlo-Regular, Menlo" font-size="48" font-weight="normal" fill="#000000">
+            <tspan x="24" y="59">0</tspan>
+        </text>
+        <text id="Single-Element-Patte" font-family="LucidaGrande-Bold, Lucida Grande" font-size="23" font-weight="bold" fill="#000000">
+            <tspan x="24" y="221">Single</tspan>
+            <tspan x="95.8525391" y="221" font-family="Beirut"> </tspan>
+            <tspan x="99.2553711" y="221">Element</tspan>
+            <tspan x="194.231445" y="221" font-family="Beirut"> </tspan>
+            <tspan x="197.634277" y="221">Pattern</tspan>
+        </text>
+    </g>
+</svg>

@@ -1,12 +1,30 @@
-# singel
+# <img src="logo.svg" width="200" alt="singel" />
 
 [![Generated with nod](https://img.shields.io/badge/generator-nod-2196F3.svg?style=flat-square)](https://github.com/diegohaz/nod)
 [![NPM version](https://img.shields.io/npm/v/singel.svg?style=flat-square)](https://npmjs.org/package/singel)
 [![Build Status](https://img.shields.io/travis/diegohaz/singel/master.svg?style=flat-square)](https://travis-ci.org/diegohaz/singel) [![Coverage Status](https://img.shields.io/codecov/c/github/diegohaz/singel/master.svg?style=flat-square)](https://codecov.io/gh/diegohaz/singel/branch/master)
 
-Test React components using the Single Element Pattern (Singel)
+<img src="https://user-images.githubusercontent.com/3068563/41149499-19878ab6-6ae2-11e8-85a2-f880fd65de7c.png" alt="Example" />
 
-## Render only one element
+**Single Element Pattern** (Singel) is a set of rules/best practices to create consistent, reliable and maintainable components in React and other component-based libraries. This is based on the idea that the building blocks of an application should resemble as most as possible native HTML elements. [**Read full article**](#coming-soon)
+
+This repo is a CLI tool for checking whether React components conform to the Singel pattern.
+
+## Installation
+
+```sh
+$ npm i -g singel
+```
+
+## Usage
+
+```sh
+$ singel path/to/**/components.js --ignore "path/to/**/ignored/components.js"
+```
+
+## Rules
+
+### Render only one element
 
 ```jsx
 // bad - 2 elements
@@ -27,7 +45,7 @@ const Element2 = props => (
 );
 ```
 
-## Render children
+### Never break the app
 
 ```jsx
 // good
@@ -35,18 +53,18 @@ const Element = props => (
   <div {...props} />
 );
 
-// bad - not rendering children
-const Element = ({ children, ...props }) => (
-  <div {...props} />
+// bad - will break if getId wasn't provided
+const Element = ({ getId, ...props }) => (
+  <div id={getId()} {...props} />
 );
 
-// good
-const Element = ({ children, ...props }) => (
-  <div {...props}>{children}</div>
+// bad - will break if foo wasn't provided
+const Element = ({ foo, ...props }) => (
+  <div id={foo.bar} {...props} />
 );
 ```
 
-## Render HTML props
+### Render all HTML attributes passed as props
 
 ```jsx
 // good
@@ -65,7 +83,7 @@ const Element = ({ id, ...props }) => (
 );
 ```
 
-## Append `className`
+### Always merge the styles passed as props
 
 ```jsx
 // good
@@ -78,33 +96,24 @@ const Element = ({ className, ...props }) => (
   <div {...props} />
 );
 
-// bad - replacing instead of appending
+// bad - not rendering style
+const Element = ({ style, ...props }) => (
+  <div {...props} />
+);
+
+// bad - replacing className instead of appending
 const Element = props => (
   <div className="foo" {...props} />
+);
+
+// bad - replacing style instead of merging
+const Element = props => (
+  <div style={{ padding: 0 }} {...props} />
 );
 
 // good
 const Element = ({ className, ...props }) => (
   <div className={`foo ${className}`} {...props} />
-);
-```
-
-## Append `style`
-
-```jsx
-// good
-const Element = props => (
-  <div {...props} />
-);
-
-// bad - not passing style
-const Element = ({ style, ...props }) => (
-  <div {...props} />
-);
-
-// bad - replacing instead of appending
-const Element = props => (
-  <div style={{ padding: 0 }} {...props} />
 );
 
 // good
@@ -113,7 +122,7 @@ const Element = ({ style, ...props }) => (
 );
 ```
 
-## Pass event handlers
+### Add all the event handlers passed as props
 
 ```jsx
 // good
@@ -136,12 +145,12 @@ const Element = ({ onClick, ...props }) => (
   <div onClick={onClick} {...props} />
 );
 
-// good - it's ok to replace
+// good - it's ok to replace internal event handlers
 const Element = props => (
   <div onClick={myFunction} {...props} />
 );
 
-// good
+// good - calling internal and prop
 const callAll = (...fns) => (...args) => 
   fns.forEach(fn => fn && fn(...args));
 
