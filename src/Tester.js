@@ -23,6 +23,7 @@ configure({ adapter: new Adapter() });
 const { window } = new JSDOM("<!doctype html><html><body></body></html>");
 global.window = window;
 global.document = window.document;
+global.navigator = window.navigator;
 
 class Tester extends EventEmitter {
   element: ComponentType<any>;

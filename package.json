@@ -49,7 +49,9 @@
   ],
   "dependencies": {
     "aria-attributes": "^1.2.3",
+    "babel-plugin-require": "^0.0.1",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+    "babel-plugin-transform-require-stub": "^0.3.0",
     "babel-register": "^6.26.0",
     "chalk": "^2.4.1",
     "enzyme": "^3.3.0",

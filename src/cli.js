@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 import { resolve, relative, isAbsolute } from "path";
+import transformES2015ModulesCommonJS from "babel-plugin-transform-es2015-modules-commonjs";
+import transformRequireStub from "babel-plugin-transform-require-stub";
 import meow from "meow";
 import glob from "glob";
 import Tester from "./Tester";
@@ -29,7 +31,20 @@ const cli = meow(
 const run = (paths, { ignore }) => {
   Logger.lineBreak();
 
-  require("babel-register")({ plugins: ["transform-es2015-modules-commonjs"] });
+  require("babel-register")({
+    plugins: [
+      transformES2015ModulesCommonJS,
+      [
+        transformRequireStub,
+        {
+          extensions: [".css", ".scss", ".sass"],
+          defaultStub: {
+            value: {}
+          }
+        }
+      ]
+    ]
+  });
 
   const realPaths = paths.reduce(
     (acc, path) => [...acc, ...glob.sync(path, { ignore, nodir: true })],
