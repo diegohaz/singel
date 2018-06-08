@@ -55,5 +55,5 @@ export const getMissingClassName = (
   const renderedArray = renderedClassName.split(" ");
   const intersectionArray = intersection(originalArray, renderedArray);
   const differenceArray = difference(originalArray, intersectionArray);
-  return differenceArray.join(" ");
+  return differenceArray.filter(c => c !== "undefined").join(" ");
 };
