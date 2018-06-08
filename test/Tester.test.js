@@ -1,60 +1,59 @@
 import React from "react";
-import { camelCase } from "lodash";
-import testComponent from "../src/testComponent";
+import Tester from "../src/Tester";
 
 // eslint-disable-next-line no-console
 console.error = jest.fn();
 
-expect.extend({
-  noErrorsInCategory(output, argument) {
-    const errCategory = `${camelCase(argument)}Test`;
-    const errTypes = Object.keys(output[errCategory]);
-    const fail = errTypes.filter(t => output[errCategory][t].length !== 0);
-
-    if (fail.length) {
-      return {
-        message: () =>
-          `Error messages: ${Object.values(output[errCategory]).join()}`,
-        pass: false
-      };
-    }
-    return {
-      message: () => "",
-      pass: true
-    };
+const expectError = (element, methodName = "run", not = false) => {
+  const listener = jest.fn();
+  const tester = new Tester(element);
+  tester.on("error", listener);
+  tester[methodName]();
+  if (not) {
+    expect(listener).not.toHaveBeenCalled();
+  } else {
+    expect(listener).toHaveBeenCalledWith(expect.any(String));
   }
-});
+};
 
-describe("break", () => {
+const expectNoError = (element, methodName) =>
+  expectError(element, methodName, true);
+
+describe("testBreak", () => {
   test("good", () => {
     const Element = ({ getId, ...props }) => {
       const id = getId ? getId() : "id";
       return <div id={id} {...props} />;
     };
-    expect(testComponent(Element)).noErrorsInCategory("break");
+    expectNoError(Element);
+    expectNoError(Element, "testBreak");
   });
 
   test("bad", () => {
     const Element = ({ getId, ...props }) => <div id={getId()} {...props} />;
-    expect(() => testComponent(Element)).toThrow();
+    expectError(Element);
+    expectError(Element, "testBreak");
   });
 });
 
-describe("single element", () => {
+describe("testOneElement", () => {
   test("good", () => {
     const Element = props => <div {...props} />;
-    expect(testComponent(Element)).noErrorsInCategory("single element");
+    expectNoError(Element);
+    expectNoError(Element, "testOneElement");
   });
 
   test("good - component renders null", () => {
     const Element = () => null;
-    expect(testComponent(Element)).noErrorsInCategory("single element");
+    expectNoError(Element);
+    expectNoError(Element, "testOneElement");
   });
 
   test("good - composing", () => {
     const Element = props => <div {...props} />;
     const Element2 = props => <Element {...props} />;
-    expect(testComponent(Element2)).noErrorsInCategory("single element");
+    expectNoError(Element2);
+    expectNoError(Element2, "testOneElement");
   });
 
   test("bad", () => {
@@ -63,103 +62,129 @@ describe("single element", () => {
         <span />
       </div>
     );
-    expect(testComponent(Element)).not.noErrorsInCategory("single element");
+    expectError(Element);
+    expectError(Element, "testOneElement");
   });
 });
 
-describe("children", () => {
+describe("testChildren", () => {
   test("good", () => {
     const Element = props => <div {...props} />;
-    expect(testComponent(Element)).noErrorsInCategory("children");
+    expectNoError(Element);
+    expectNoError(Element, "testChildren");
   });
 
   test("good - void element", () => {
     const Element = ({ children, ...props }) => <img {...props} />;
-    expect(testComponent(Element)).noErrorsInCategory("children");
+    expectNoError(Element);
+    expectNoError(Element, "testChildren");
+  });
+
+  test("good - composing", () => {
+    const Element = props => <div {...props} />;
+    const Element2 = props => <Element {...props} />;
+    expectNoError(Element2);
+    expectNoError(Element2, "testChildren");
   });
 
   test("bad", () => {
     const Element = ({ children, ...props }) => <div {...props} />;
-    expect(testComponent(Element)).not.noErrorsInCategory("children");
+    expectError(Element);
+    expectError(Element, "testChildren");
   });
 });
 
-describe("html props", () => {
+describe("testHTMLProps", () => {
   test("good", () => {
     const Element = props => <div {...props} />;
-    expect(testComponent(Element)).noErrorsInCategory("html props");
+    expectNoError(Element);
+    expectNoError(Element, "testHTMLProps");
   });
 
   test("bad", () => {
     const Element = ({ children }) => <div>{children}</div>;
-    expect(testComponent(Element)).not.noErrorsInCategory("html props");
+    expectError(Element);
+    expectError(Element, "testHTMLProps");
   });
 });
 
-describe("className", () => {
+describe("testClassName", () => {
   test("good", () => {
     const Element = props => <div {...props} />;
-    expect(testComponent(Element)).noErrorsInCategory("className");
+    expectNoError(Element);
+    expectNoError(Element, "testClassName");
   });
 
   test("good - appending className", () => {
     const Element = ({ className, ...props }) => (
       <div className={`foo ${className}`} {...props} />
     );
-    expect(testComponent(Element)).noErrorsInCategory("className");
+    expectNoError(Element);
+    expectNoError(Element, "testClassName");
   });
 
   test("bad - not rendering className", () => {
     const Element = ({ className, ...props }) => <div {...props} />;
-    expect(testComponent(Element)).not.noErrorsInCategory("className");
+    expectError(Element);
+    expectError(Element, "testClassName");
   });
 
   test("bad - replacing instead of appending", () => {
     const Element = props => <div className="foo" {...props} />;
-    expect(testComponent(Element)).not.noErrorsInCategory("className");
+    expectError(Element);
+    expectError(Element, "testClassName");
   });
 });
 
-describe("style props", () => {
+describe("testStyle", () => {
   test("good", () => {
     const Element = props => <div {...props} />;
-    expect(testComponent(Element)).noErrorsInCategory("style props");
+    expectNoError(Element);
+    expectNoError(Element, "testStyle");
   });
 
   test("good - appending style", () => {
     const Element = ({ style, ...props }) => (
       <div style={{ padding: 10, ...style }} {...props} />
     );
-    expect(testComponent(Element)).noErrorsInCategory("style props");
+    expectNoError(Element);
+    expectNoError(Element, "testStyle");
   });
 
   test("bad - override style props", () => {
     const Element = ({ style, ...props }) => (
       <div style={{ ...style, padding: 10 }} {...props} />
     );
-    expect(testComponent(Element)).not.noErrorsInCategory("style props");
+    expectError(Element);
+    expectError(Element, "testStyle");
   });
 
   test("bad - not rendering style", () => {
     const Element = ({ style, ...props }) => <div {...props} />;
-    expect(testComponent(Element)).not.noErrorsInCategory("style props");
-  });
-
-  test("bad - replacing instead of appending", () => {
-    const Element = props => <div style={{ padding: 10 }} {...props} />;
-    expect(testComponent(Element)).not.noErrorsInCategory("style props");
+    expectError(Element);
+    expectError(Element, "testStyle");
   });
 });
 
-describe("event handlers", () => {
+describe("testInternalStyle", () => {
+  test("bad - replacing instead of appending", () => {
+    const Element = props => <div style={{ padding: 10 }} {...props} />;
+    expectError(Element);
+    expectError(Element, "testInternalStyle");
+  });
+});
+
+describe("testEventHandlers", () => {
   test("good", () => {
     const Element = props => <div {...props} />;
-    expect(testComponent(Element)).noErrorsInCategory("event handlers");
+    expectNoError(Element);
+    expectNoError(Element, "testEventHandlers");
   });
 
   test("good - replacing original onClick", () => {
     const Element = props => <div onClick={jest.fn} {...props} />;
-    expect(testComponent(Element)).noErrorsInCategory("event handlers");
+    expectNoError(Element);
+    expectNoError(Element, "testEventHandlers");
   });
 
   test("good - composing event handler", () => {
@@ -169,23 +194,27 @@ describe("event handlers", () => {
     const Element = ({ onClick, ...props }) => (
       <div onClick={callAll(jest.fn, onClick)} {...props} />
     );
-    expect(testComponent(Element)).noErrorsInCategory("event handlers");
+    expectNoError(Element);
+    expectNoError(Element, "testEventHandlers");
   });
 
   test("bad - not passing onClick", () => {
     const Element = ({ onClick, ...props }) => <div {...props} />;
-    expect(testComponent(Element)).not.noErrorsInCategory("event handlers");
+    expectError(Element);
+    expectError(Element, "testEventHandlers");
   });
 
   test("bad - not passing args to onClick", () => {
     const Element = ({ onClick, ...props }) => (
       <div onClick={() => onClick()} {...props} />
     );
-    expect(testComponent(Element)).not.noErrorsInCategory("event handlers");
+    expectError(Element);
+    expectError(Element, "testEventHandlers");
   });
 
   test("bad - replacing onClick prop", () => {
     const Element = props => <div {...props} onClick={jest.fn} />;
-    expect(testComponent(Element)).not.noErrorsInCategory("event handlers");
+    expectError(Element);
+    expectError(Element, "testEventHandlers");
   });
 });

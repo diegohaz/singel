@@ -1,78 +1,93 @@
 #!/usr/bin/env node
-import { join, isAbsolute } from "path";
+import { resolve, relative, isAbsolute } from "path";
+import transformES2015ModulesCommonJS from "babel-plugin-transform-es2015-modules-commonjs";
+import transformRequireStub from "babel-plugin-transform-require-stub";
 import meow from "meow";
-import { JSDOM } from "jsdom";
-import { upperCase, startCase } from "lodash";
-import chalk from "chalk";
-import testComponent from ".";
+import glob from "glob";
+import Tester from "./Tester";
+import Logger from "./Logger";
 
-const { window } = new JSDOM("<!doctype html><html><body></body></html>");
-global.window = window;
-global.document = window.document;
-
-const cli = meow(`
+const cli = meow(
+  `
   Usage
-    $ singel [path]
+    $ singel <path>
+
+  Options
+    --ignore, -i Ignore paths
 
   Examples
-    $ singel src/elements/**
-`);
-
-const run = paths => {
-  require("babel-register")({ plugins: ["transform-es2015-modules-commonjs"] });
-  let result;
-
-  paths.forEach(path => {
-    const p = isAbsolute(path) ? path : join(process.cwd(), path);
-    const { default: Component } = require(p);
-    result = testComponent(Component);
-  });
-  return result;
-};
-
-const format = result => {
-  const red = chalk.rgb(233, 25, 102);
-  const orange = chalk.rgb(233, 105, 52);
-  const green = chalk.rgb(103, 213, 2);
-  const gray = chalk.hex("#979797");
-  const indent = console.group;
-  const outdent = console.groupEnd;
-  const print = console.log;
-
-  Object.keys(result).forEach(errorCategory => {
-    print("");
-    print(chalk.underline(upperCase(errorCategory)));
-
-    Object.keys(result[errorCategory]).forEach(errorType => {
-      const errorTypeTitle = startCase(errorType);
-      const totalErrors = result[errorCategory][errorType].length;
-      const maxErrorsToShow = 5;
-      const typeTitleLine = totalErrors
-        ? `${errorTypeTitle} (${red(totalErrors)} errors)`
-        : errorTypeTitle;
-      const errorsToPrint =
-        totalErrors > maxErrorsToShow
-          ? result[errorCategory][errorType].slice(0, maxErrorsToShow)
-          : result[errorCategory][errorType];
-
-      indent();
-      indent(gray(typeTitleLine));
-
-      if (totalErrors) {
-        errorsToPrint.forEach(error => print(red(`✘ ${error}`)));
-
-        if (errorsToPrint.length !== totalErrors) {
-          print(orange(`...and ${totalErrors - maxErrorsToShow} more errors.`));
-        }
-      } else {
-        print(green(`✔︎ OK`));
+    $ singel src/elements/**/*.js
+`,
+  {
+    flags: {
+      ignore: {
+        type: "string",
+        alias: "i"
       }
+    }
+  }
+);
 
-      outdent();
-      outdent();
-    });
+const run = (paths, { ignore }) => {
+  Logger.lineBreak();
+
+  require("babel-register")({
+    plugins: [
+      transformES2015ModulesCommonJS,
+      [
+        transformRequireStub,
+        {
+          extensions: [".css", ".scss", ".sass"],
+          defaultStub: {
+            value: {}
+          }
+        }
+      ]
+    ]
   });
-  print("\n");
+
+  const realPaths = paths.reduce(
+    (acc, path) => [...acc, ...glob.sync(path, { ignore, nodir: true })],
+    []
+  );
+
+  let hasErrors = false;
+  let lastHasError = false;
+
+  const exit = () => {
+    if (hasErrors) {
+      process.exit(1);
+    }
+  };
+
+  realPaths.forEach((path, i) => {
+    const absolutePath = isAbsolute(path) ? path : resolve(process.cwd(), path);
+    const relativePath = relative(process.cwd(), absolutePath);
+    const { default: Element } = require(absolutePath);
+    const tester = new Tester(Element);
+    const logger = new Logger(Element, relativePath);
+
+    logger.start();
+
+    tester.on("error", message => {
+      hasErrors = true;
+      logger.addError(message);
+    });
+
+    tester.on("end", failed => {
+      if (failed) {
+        logger.fail(i > 0 && !lastHasError);
+        lastHasError = true;
+      } else {
+        logger.succeed();
+        lastHasError = false;
+      }
+    });
+
+    tester.run();
+  });
+
+  exit();
 };
 
-format(run(cli.input));
+run(cli.input, cli.flags);
