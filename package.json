@@ -1,6 +1,6 @@
 {
   "name": "singel",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Test React components using the Single Element Pattern (Singel)",
   "license": "MIT",
   "repository": "diegohaz/singel",
