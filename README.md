@@ -21,7 +21,7 @@ $ npm i -g singel
 ## Usage
 
 ```sh
-$ singel path/to/**/components.js --ignore "path/to/**/ignored/components.js"
+$ singel path/to/**/Component.js --ignore "path/to/**/ignored/Component.js"
 ```
 
 ## Rules
