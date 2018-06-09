@@ -1,10 +1,14 @@
 // @flow
 import { all as cssProps } from "known-css-properties";
-import htmlProps from "react-known-props";
 import ariaProps from "aria-attributes";
 import voidElements from "void-elements";
 import { spy } from "sinon";
 import { camelCase, intersection, difference } from "lodash";
+import {
+  getElementProps,
+  getEventProps,
+  getGlobalProps
+} from "react-known-props";
 
 const reducer = (acc, key) => ({ ...acc, [key]: key });
 
@@ -25,19 +29,23 @@ export const getStyleProps = (): Object =>
     .map(camelCase)
     .reduce(reducer, {});
 
-export const getReactProps = (): Object => {
-  const excludeProps = ["style", "className", "on[A-Z].+"];
+export const getReactProps = (type?: string): Object => {
+  const excludeProps = [
+    "style",
+    "className",
+    "dangerouslySetInnerHTML",
+    "on[A-Z].+"
+  ];
   const excludePropsRegex = new RegExp(`^${excludeProps.join("|")}$`);
+  const props = type ? getElementProps(type) : getGlobalProps();
 
-  return [...htmlProps, ...ariaProps]
+  return [...props, ...ariaProps]
     .filter(prop => !excludePropsRegex.test(prop))
     .reduce(reducer, {});
 };
 
 export const getReactEventHandlers = (): Object =>
-  htmlProps
-    .filter(prop => /^on[A-Z]/.test(prop))
-    .reduce((acc, key) => ({ ...acc, [key]: spy() }), {});
+  getEventProps().reduce((acc, key) => ({ ...acc, [key]: spy() }), {});
 
 export const getEventName = (prop: string = ""): string => {
   const eventName = prop.replace(/^on/, "");

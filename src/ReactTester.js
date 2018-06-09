@@ -95,9 +95,11 @@ class Tester extends EventEmitter {
   };
 
   testHTMLProps = () => {
-    const reactProps = getReactProps();
+    const originalWrapper = this.mount();
+    if (!getHTMLTag(originalWrapper)) return;
+    const type = findHTMLTag(originalWrapper).type();
+    const reactProps = getReactProps(type);
     const wrapper = this.mount(reactProps);
-    if (!getHTMLTag(wrapper)) return;
     const props = findHTMLTag(wrapper).props();
 
     Object.keys(reactProps).forEach(prop => {
@@ -182,7 +184,11 @@ class Tester extends EventEmitter {
 
     Object.keys(eventHandlers).forEach(prop => {
       const event = eventHandlers[prop];
-      wrapper.simulate(getEventName(prop));
+      try {
+        wrapper.simulate(getEventName(prop));
+      } catch (e) {
+        this.emit("error", `Don't break: ${e.message}`);
+      }
 
       if (!event.called) {
         this.emit("error", `Call event handlers passed as props: ${prop}`);

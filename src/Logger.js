@@ -25,7 +25,7 @@ class Logger {
   constructor(
     Element: ComponentType<any>,
     path: string,
-    { maxErrors = 5 }: Options = {}
+    { maxErrors = 10 }: Options = {}
   ) {
     this.element = Element;
     this.path = path;

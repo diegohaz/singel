@@ -2508,10 +2508,6 @@ hosted-git-info@^2.1.4:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.6.0.tgz#23235b29ab230c576aab0d4f13fc046b0b038222"
 
-html-attributes@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/html-attributes/-/html-attributes-1.1.0.tgz#82027a4fac7a6070ea6c18cc3886aea18d6dea09"
-
 html-encoding-sniffer@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/html-encoding-sniffer/-/html-encoding-sniffer-1.0.2.tgz#e70d84b94da53aa375e11fe3a351be6642ca46f8"
@@ -4383,11 +4379,9 @@ react-is@^16.4.0:
   version "16.4.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.4.0.tgz#cc9fdc855ac34d2e7d9d2eb7059bbc240d35ffcf"
 
-react-known-props@^1.2.0:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/react-known-props/-/react-known-props-1.2.2.tgz#f5dae1dffb2da966aa5566f9ffc872bd62975e90"
-  dependencies:
-    html-attributes "^1.1.0"
+react-known-props@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-known-props/-/react-known-props-2.0.0.tgz#91cfbcecd995cc7215b62b821722c7dba1d0ba56"
 
 react-reconciler@^0.7.0:
   version "0.7.0"
