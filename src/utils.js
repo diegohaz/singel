@@ -1,6 +1,5 @@
 // @flow
 import { all as cssProps } from "known-css-properties";
-import ariaProps from "aria-attributes";
 import voidElements from "void-elements";
 import { spy } from "sinon";
 import { camelCase, intersection, difference } from "lodash";
@@ -30,16 +29,11 @@ export const getStyleProps = (): Object =>
     .reduce(reducer, {});
 
 export const getReactProps = (type?: string): Object => {
-  const excludeProps = [
-    "style",
-    "className",
-    "dangerouslySetInnerHTML",
-    "on[A-Z].+"
-  ];
+  const excludeProps = ["style", "className", "dangerouslySetInnerHTML"];
   const excludePropsRegex = new RegExp(`^${excludeProps.join("|")}$`);
   const props = type ? getElementProps(type) : getGlobalProps();
 
-  return [...props, ...ariaProps]
+  return props
     .filter(prop => !excludePropsRegex.test(prop))
     .reduce(reducer, {});
 };
