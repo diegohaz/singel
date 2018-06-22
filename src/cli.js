@@ -41,6 +41,7 @@ const run = (paths, { ignore }) => {
   let lastHasError = false;
 
   const exit = () => {
+    Logger.summary();
     if (hasErrors) {
       process.exit(1);
     }
