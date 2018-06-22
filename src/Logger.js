@@ -55,6 +55,7 @@ class Logger {
       const remaining = errors.length - options.maxErrors;
       console.log(chalk.yellow(`  ... and ${remaining} more errors.`));
     }
+    console.log(chalk.green(`${errors.length} errors`));
     Logger.lineBreak();
   }
 
