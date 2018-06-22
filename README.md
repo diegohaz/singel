@@ -210,9 +210,9 @@ Usage:
   </Button.Tooltip>
   Hover me
 </Button>
+```
 
 Both `Button` and `Button.Tooltip` are single elements. You have all the benefits you would have by nesting them, but now with complete control over `Button.Tooltip` from outside.
-```
 
 ## License
 
