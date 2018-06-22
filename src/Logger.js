@@ -18,6 +18,20 @@ class Logger {
   loader: Object;
   errors: string[] = [];
 
+  static componentCount = 0;
+  static totalErrorCount = 0;
+
+  static summary() {
+    Logger.lineBreak();
+    console.log(`${Logger.componentCount} elements`);
+    console.log(
+      Logger.totalErrorCount
+        ? `${chalk.red(`${Logger.totalErrorCount} errors`)}`
+        : `${chalk.green("0 errors")}`
+    );
+    Logger.lineBreak();
+  }
+
   static lineBreak() {
     console.log();
   }
@@ -30,6 +44,7 @@ class Logger {
     this.element = Element;
     this.path = path;
     this.options = { maxErrors };
+    Logger.componentCount++;
   }
 
   start() {
@@ -41,6 +56,7 @@ class Logger {
 
   addError(message: string) {
     this.errors.push(`  ${chalk.red(message)}`);
+    Logger.totalErrorCount++;
   }
 
   fail(lineBreakAtTop: boolean) {
@@ -55,12 +71,12 @@ class Logger {
       const remaining = errors.length - options.maxErrors;
       console.log(chalk.yellow(`  ... and ${remaining} more errors.`));
     }
-    console.log(chalk.green(`${errors.length} errors`));
     Logger.lineBreak();
   }
 
   succeed() {
     this.loader.succeed();
+    Logger.summary();
   }
 }
 
