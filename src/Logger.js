@@ -18,12 +18,12 @@ class Logger {
   loader: Object;
   errors: string[] = [];
 
-  static elementCount = 0;
+  static elementsCount = 0;
   static totalErrorCount = 0;
 
   static summary() {
     Logger.lineBreak();
-    console.log(`${Logger.elementCount} elements`);
+    console.log(`${Logger.elementsCount} elements`);
     console.log(
       Logger.totalErrorCount
         ? `${chalk.red(`${Logger.totalErrorCount} errors`)}`
@@ -44,7 +44,7 @@ class Logger {
     this.element = Element;
     this.path = path;
     this.options = { maxErrors };
-    Logger.elementCount++;
+    Logger.elementsCount += 1;
   }
 
   start() {
@@ -56,7 +56,7 @@ class Logger {
 
   addError(message: string) {
     this.errors.push(`  ${chalk.red(message)}`);
-    Logger.totalErrorCount++;
+    Logger.totalErrorCount += 1;
   }
 
   fail(lineBreakAtTop: boolean) {
@@ -76,7 +76,6 @@ class Logger {
 
   succeed() {
     this.loader.succeed();
-    Logger.summary();
   }
 }
 
