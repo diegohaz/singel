@@ -161,6 +161,59 @@ const Element = ({ onClick, ...props }) => (
 );
 ```
 
+## FAQ
+
+### How to handle nested elements?
+
+Say you have a `Button` element and you want to display a `Tooltip` when it's hovered. The first rule you'll want to break is rendering only one element. To handle that you have some options:
+
+- Use CSS pseudo-elements (such as `:after` and `:before`);
+- Create a non-singel element, which is fine;
+- Nest styles instead of components.
+
+Here's an example of how you can accomplish tha latter one:
+
+```css
+/* could also be CSS-in-JS */
+.button {
+  position: relative;
+  /* more button css */
+}
+
+.button:hover .tooltip {
+  display: block;
+}
+
+.button .tooltip {
+  display: none;
+  position: absolute;
+  /* more tooltip css */
+}
+```
+
+```jsx
+const Button = ({ className, ...props }) => (
+  <button className={`button ${className}`} {...props} />
+);
+
+Button.Tooltip = ({ className, ...props }) => (
+  <div className={`tooltip ${className}`} {...props} />
+);
+```
+
+Usage:
+
+```jsx
+<Button className="my-specific-button">
+  <Button.Tooltip className="my-specific-tooltip">
+    😁
+  </Button.Tooltip>
+  Hover me
+</Button>
+
+Both `Button` and `Button.Tooltip` are single elements. You have all the benefits you would have by nesting them, but now with complete control over `Button.Tooltip` from outside.
+```
+
 ## License
 
 MIT © [Diego Haz](https://github.com/diegohaz)
