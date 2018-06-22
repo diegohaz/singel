@@ -18,12 +18,12 @@ class Logger {
   loader: Object;
   errors: string[] = [];
 
-  static componentCount = 0;
+  static elementCount = 0;
   static totalErrorCount = 0;
 
   static summary() {
     Logger.lineBreak();
-    console.log(`${Logger.componentCount} elements`);
+    console.log(`${Logger.elementCount} elements`);
     console.log(
       Logger.totalErrorCount
         ? `${chalk.red(`${Logger.totalErrorCount} errors`)}`
@@ -44,7 +44,7 @@ class Logger {
     this.element = Element;
     this.path = path;
     this.options = { maxErrors };
-    Logger.componentCount++;
+    Logger.elementCount++;
   }
 
   start() {
