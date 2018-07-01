@@ -27,8 +27,8 @@ import babelConfig from "./babelConfig";
 //   }
 // );
 
-const run = paths => {
-  Logger.lineBreak();
+const run = (paths, { ignore }) => {
+  Logger.writeln();
 
   require("babel-register")(babelConfig);
 
@@ -41,7 +41,7 @@ const run = paths => {
   let lastHasError = false;
 
   const exit = () => {
-    Logger.summary();
+    Logger.summary(!lastHasError);
     if (hasErrors) {
       process.exit(1);
     }
