@@ -50,7 +50,8 @@ class Logger {
   start() {
     const elementName = this.element.displayName || this.element.name;
     this.loader = ora(
-      `${chalk.bold(elementName)} ${chalk.gray(chalk.underline(this.path))}`
+      `${chalk.bold(elementName)} ${chalk.gray(chalk.underline(this.path))}`,
+      { stream: process.stdout }
     ).start();
   }
 
