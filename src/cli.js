@@ -28,7 +28,7 @@ const cli = meow(
 );
 
 const run = (paths, { ignore }) => {
-  Logger.lineBreak();
+  Logger.writeln();
 
   require("babel-register")(babelConfig);
 
