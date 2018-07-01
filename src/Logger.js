@@ -49,11 +49,9 @@ class Logger {
 
   start() {
     const elementName = this.element.displayName || this.element.name;
-    this.loader = ora({
-      text: `${chalk.bold(elementName)} ${chalk.gray(
-        chalk.underline(this.path)
-      )}`
-    }).start();
+    this.loader = ora(
+      `${chalk.bold(elementName)} ${chalk.gray(chalk.underline(this.path))}`
+    ).start();
   }
 
   addError(message: string) {
