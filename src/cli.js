@@ -28,7 +28,7 @@ const cli = meow(
 );
 
 const run = (paths, { ignore }) => {
-  Logger.lineBreak();
+  Logger.writeln();
 
   require("babel-register")(babelConfig);
 
@@ -41,7 +41,7 @@ const run = (paths, { ignore }) => {
   let lastHasError = false;
 
   const exit = () => {
-    Logger.summary();
+    Logger.summary(!lastHasError);
     if (hasErrors) {
       process.exit(1);
     }

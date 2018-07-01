@@ -21,19 +21,21 @@ class Logger {
   static elementsCount = 0;
   static totalErrorCount = 0;
 
-  static summary() {
-    Logger.lineBreak();
-    console.log(`${Logger.elementsCount} elements`);
-    console.log(
+  static summary(lineBreakAtTop: boolean) {
+    if (lineBreakAtTop) {
+      Logger.writeln();
+    }
+    Logger.writeln(`${Logger.elementsCount} elements`);
+    Logger.writeln(
       Logger.totalErrorCount
         ? `${chalk.red(`${Logger.totalErrorCount} errors`)}`
         : `${chalk.green("0 errors")}`
     );
-    Logger.lineBreak();
+    Logger.writeln();
   }
 
-  static lineBreak() {
-    console.log();
+  static writeln(text: string = "") {
+    return process.stdout.write(`${text}\n`);
   }
 
   constructor(
@@ -63,18 +65,24 @@ class Logger {
     const { loader, errors, options } = this;
 
     loader.clear();
-    if (lineBreakAtTop) Logger.lineBreak();
+
+    if (lineBreakAtTop) {
+      Logger.writeln();
+    }
+
+    loader.enabled = true;
     loader.fail();
-    errors.slice(0, options.maxErrors).forEach(error => console.log(error));
+    errors.slice(0, options.maxErrors).forEach(error => Logger.writeln(error));
 
     if (errors.length > options.maxErrors) {
       const remaining = errors.length - options.maxErrors;
-      console.log(chalk.yellow(`  ... and ${remaining} more errors.`));
+      Logger.writeln(chalk.yellow(`  ... and ${remaining} more errors.`));
     }
-    Logger.lineBreak();
+    Logger.writeln();
   }
 
   succeed() {
+    this.loader.enabled = true;
     this.loader.succeed();
   }
 }
