@@ -1,33 +1,19 @@
 #!/usr/bin/env node
 import { resolve, relative, isAbsolute } from "path";
-// import meow from "meow";
 import glob from "glob";
 import ReactTester from "./ReactTester";
 import Logger from "./Logger";
 import babelConfig from "./babelConfig";
 
-// const cli = meow(
-//   `
-//   Usage
-//     $ singel <path>
+// eslint-disable-next-line no-unused-vars
+const [node, singel, ...elements] = process.argv;
 
-//   Options
-//     --ignore, -i Ignore paths
+if (!elements) {
+  process.stdout.write("no paths given \n");
+  process.exit(1);
+}
 
-//   Examples
-//     $ singel src/elements/**/*.js
-// `,
-//   {
-//     flags: {
-//       ignore: {
-//         type: "string",
-//         alias: "i"
-//       }
-//     }
-//   }
-// );
-
-const run = (paths, { ignore }) => {
+const run = paths => {
   Logger.writeln();
 
   require("babel-register")(babelConfig);
@@ -84,4 +70,4 @@ const run = (paths, { ignore }) => {
   exit();
 };
 
-run(["../reakit/src/components/**/index.js"]);
+run(elements);

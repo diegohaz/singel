@@ -22,7 +22,7 @@
   "scripts": {
     "test": "jest",
     "test:cli": "babel-node src/cli.js test/fixture.js",
-    "foo": " yarn build 1>/dev/null && node dist/cli.js ../reakit/src/components/**/index.js",
+    "foo": " yarn build 1>/dev/null && node dist/cli.js",
     "coverage": "npm test -- --coverage",
     "postcoverage": "opn coverage/lcov-report/index.html",
     "lint": "eslint src test",
