@@ -48,10 +48,14 @@ class Logger {
   }
 
   start() {
-    const elementName = this.element.displayName || this.element.name;
-    this.loader = ora(
-      `${chalk.bold(elementName)} ${chalk.gray(chalk.underline(this.path))}`
-    ).start();
+    const elementName =
+      this.element && (this.element.displayName || this.element.name);
+    this.loader = ora({
+      text: `${chalk.bold(elementName)} ${chalk.gray(
+        chalk.underline(this.path)
+      )}`,
+      stream: process.stdout
+    }).start();
   }
 
   addError(message: string) {
@@ -60,6 +64,10 @@ class Logger {
   }
 
   fail(lineBreakAtTop: boolean) {
+    // const noop = () => {};
+    // this.loader = {};
+    // this.loader.clear = noop;
+    // this.loader.fail = noop;
     const { loader, errors, options } = this;
 
     loader.clear();
@@ -75,6 +83,9 @@ class Logger {
   }
 
   succeed() {
+    // const noop = () => {};
+    // this.loader = {};
+    // this.loader.succeed = noop;
     this.loader.succeed();
   }
 }

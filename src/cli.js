@@ -3,7 +3,7 @@ import { resolve, relative, isAbsolute } from "path";
 // import meow from "meow";
 import glob from "glob";
 import ReactTester from "./ReactTester";
-// import Logger from "./Logger";
+import Logger from "./Logger";
 import babelConfig from "./babelConfig";
 
 // const cli = meow(
@@ -28,7 +28,7 @@ import babelConfig from "./babelConfig";
 // );
 
 const run = paths => {
-  // Logger.lineBreak();
+  Logger.lineBreak();
 
   require("babel-register")(babelConfig);
 
@@ -41,7 +41,7 @@ const run = paths => {
   let lastHasError = false;
 
   const exit = () => {
-    // Logger.summary();
+    Logger.summary();
     if (hasErrors) {
       process.exit(1);
     }
@@ -49,32 +49,32 @@ const run = paths => {
 
   realPaths.forEach((path, i) => {
     const absolutePath = isAbsolute(path) ? path : resolve(process.cwd(), path);
-    // const relativePath = relative(process.cwd(), absolutePath);
+    const relativePath = relative(process.cwd(), absolutePath);
     const { default: Element } = require(absolutePath);
     const tester = new ReactTester(Element);
-    // const logger = new Logger(Element, relativePath);
+    const logger = new Logger(Element, relativePath);
 
-    // logger.start();
+    logger.start();
 
     tester.on("error", message => {
       hasErrors = true;
-      // logger.addError(message);
+      logger.addError(message);
     });
 
     tester.on("start", message => {
-      console.log("starting");
+      // console.log("starting");
 
-      // logger.addError(message);
+      logger.addError(message);
     });
 
     tester.on("end", failed => {
-      console.log("end");
+      // console.log("end");
       if (failed) {
-        // logger.fail(i > 0 && !lastHasError);
+        logger.fail(i > 0 && !lastHasError);
         lastHasError = true;
       } else {
-        // logger.succeed();
-        // lastHasError = false;
+        logger.succeed();
+        lastHasError = false;
       }
     });
 
@@ -84,4 +84,4 @@ const run = paths => {
   exit();
 };
 
-run(["../upstream-reas/src/components/**/index.js"]);
+run(["../reakit/src/components/**/index.js"]);
