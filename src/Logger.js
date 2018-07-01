@@ -52,9 +52,7 @@ class Logger {
     this.loader = ora({
       text: `${chalk.bold(elementName)} ${chalk.gray(
         chalk.underline(this.path)
-      )}`,
-      stream: process.stdout,
-      enabled: true
+      )}`
     }).start();
   }
 
@@ -67,7 +65,12 @@ class Logger {
     const { loader, errors, options } = this;
 
     loader.clear();
-    if (lineBreakAtTop) Logger.writeln();
+
+    if (lineBreakAtTop) {
+      Logger.writeln();
+    }
+
+    loader.enabled = true;
     loader.fail();
     errors.slice(0, options.maxErrors).forEach(error => Logger.writeln(error));
 
@@ -79,6 +82,7 @@ class Logger {
   }
 
   succeed() {
+    this.loader.enabled = true;
     this.loader.succeed();
   }
 }
