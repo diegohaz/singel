@@ -53,7 +53,8 @@ class Logger {
       text: `${chalk.bold(elementName)} ${chalk.gray(
         chalk.underline(this.path)
       )}`,
-      stream: process.stdout
+      stream: process.stdout,
+      enabled: true
     }).start();
   }
 
