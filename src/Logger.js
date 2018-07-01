@@ -49,10 +49,12 @@ class Logger {
 
   start() {
     const elementName = this.element.displayName || this.element.name;
-    this.loader = ora(
-      `${chalk.bold(elementName)} ${chalk.gray(chalk.underline(this.path))}`,
-      { stream: process.stdout }
-    ).start();
+    this.loader = ora({
+      text: `${chalk.bold(elementName)} ${chalk.gray(
+        chalk.underline(this.path)
+      )}`,
+      stream: process.stdout
+    }).start();
   }
 
   addError(message: string) {
