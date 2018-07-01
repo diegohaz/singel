@@ -21,8 +21,10 @@ class Logger {
   static elementsCount = 0;
   static totalErrorCount = 0;
 
-  static summary() {
-    Logger.writeln();
+  static summary(lineBreakAtTop: boolean) {
+    if (lineBreakAtTop) {
+      Logger.writeln();
+    }
     Logger.writeln(`${Logger.elementsCount} elements`);
     Logger.writeln(
       Logger.totalErrorCount
