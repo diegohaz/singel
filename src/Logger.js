@@ -2,7 +2,6 @@
 /* eslint-disable no-console */
 import type { ComponentType } from "react";
 import chalk from "chalk";
-import ora from "ora";
 
 type Options = {
   maxErrors: number
@@ -14,6 +13,7 @@ console.error = () => {};
 class Logger {
   element: ComponentType<any>;
   path: string;
+  text: string;
   options: Options;
   loader: Object;
   errors: string[] = [];
@@ -38,6 +38,10 @@ class Logger {
     return process.stdout.write(`${text}\n`);
   }
 
+  static write(text: string = "") {
+    return process.stdout.write(`${text}`);
+  }
+
   constructor(
     Element: ComponentType<any>,
     path: string,
@@ -52,12 +56,27 @@ class Logger {
   start() {
     const elementName =
       this.element && (this.element.displayName || this.element.name);
-    this.loader = ora({
-      text: `${chalk.bold(elementName)} ${chalk.gray(
-        chalk.underline(this.path)
-      )}`,
-      stream: process.stdout
-    }).start();
+
+    this.text = `${chalk.bold(elementName)} ${chalk.gray(
+      chalk.underline(this.path)
+    )}`;
+
+    const noop = () => {};
+    const repeatString = (s = "", n = 1) => {
+      let string = s;
+
+      for (let i = 1; i < n; i += 1) string += s;
+
+      return string;
+    };
+
+    this.loader = {};
+    this.loader.fail = () => Logger.writeln(`❌ ${chalk.red(this.text)}`);
+    this.loader.succeed = () => Logger.writeln(`✔︎ ${chalk.green(this.text)}`);
+    this.loader.clear = () =>
+      Logger.writeln(repeatString(" ", process.stdout.columns));
+
+    Logger.writeln(this.text);
   }
 
   addError(message: string) {
@@ -66,10 +85,6 @@ class Logger {
   }
 
   fail(lineBreakAtTop: boolean) {
-    // const noop = () => {};
-    // this.loader = {};
-    // this.loader.clear = noop;
-    // this.loader.fail = noop;
     const { loader, errors, options } = this;
 
     loader.clear();

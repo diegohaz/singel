@@ -31,6 +31,7 @@ const run = paths => {
     if (hasErrors) {
       process.exit(1);
     }
+    process.exit(0);
   };
 
   realPaths.forEach((path, i) => {
@@ -38,28 +39,25 @@ const run = paths => {
     const relativePath = relative(process.cwd(), absolutePath);
     const { default: Element } = require(absolutePath);
     const tester = new ReactTester(Element);
-    // // const logger = new Logger(Element, relativePath);
+    const logger = new Logger(Element, relativePath);
 
-    // logger.start();
+    logger.start();
 
     tester.on("error", message => {
       hasErrors = true;
-      // logger.addError(message);
+      logger.addError(message);
     });
 
     tester.on("start", message => {
-      console.log("starting");
-
-      // logger.addError(message);
+      logger.addError(message);
     });
 
     tester.on("end", failed => {
-      console.log("end");
       if (failed) {
-        // logger.fail(i > 0 && !lastHasError);
+        logger.fail(i > 0 && !lastHasError);
         lastHasError = true;
       } else {
-        // logger.succeed();
+        logger.succeed();
         lastHasError = false;
       }
     });
