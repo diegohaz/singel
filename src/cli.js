@@ -1,39 +1,39 @@
 #!/usr/bin/env node
 import { resolve, relative, isAbsolute } from "path";
-import meow from "meow";
+// import meow from "meow";
 import glob from "glob";
 import ReactTester from "./ReactTester";
-import Logger from "./Logger";
+// import Logger from "./Logger";
 import babelConfig from "./babelConfig";
 
-const cli = meow(
-  `
-  Usage
-    $ singel <path>
+// const cli = meow(
+//   `
+//   Usage
+//     $ singel <path>
 
-  Options
-    --ignore, -i Ignore paths
+//   Options
+//     --ignore, -i Ignore paths
 
-  Examples
-    $ singel src/elements/**/*.js
-`,
-  {
-    flags: {
-      ignore: {
-        type: "string",
-        alias: "i"
-      }
-    }
-  }
-);
+//   Examples
+//     $ singel src/elements/**/*.js
+// `,
+//   {
+//     flags: {
+//       ignore: {
+//         type: "string",
+//         alias: "i"
+//       }
+//     }
+//   }
+// );
 
-const run = (paths, { ignore }) => {
-  Logger.lineBreak();
+const run = paths => {
+  // Logger.lineBreak();
 
   require("babel-register")(babelConfig);
 
   const realPaths = paths.reduce(
-    (acc, path) => [...acc, ...glob.sync(path, { ignore, nodir: true })],
+    (acc, path) => [...acc, ...glob.sync(path, { nodir: true })],
     []
   );
 
@@ -41,7 +41,7 @@ const run = (paths, { ignore }) => {
   let lastHasError = false;
 
   const exit = () => {
-    Logger.summary();
+    // Logger.summary();
     if (hasErrors) {
       process.exit(1);
     }
@@ -49,25 +49,32 @@ const run = (paths, { ignore }) => {
 
   realPaths.forEach((path, i) => {
     const absolutePath = isAbsolute(path) ? path : resolve(process.cwd(), path);
-    const relativePath = relative(process.cwd(), absolutePath);
+    // const relativePath = relative(process.cwd(), absolutePath);
     const { default: Element } = require(absolutePath);
     const tester = new ReactTester(Element);
-    const logger = new Logger(Element, relativePath);
+    // const logger = new Logger(Element, relativePath);
 
-    logger.start();
+    // logger.start();
 
     tester.on("error", message => {
       hasErrors = true;
-      logger.addError(message);
+      // logger.addError(message);
+    });
+
+    tester.on("start", message => {
+      console.log("starting");
+
+      // logger.addError(message);
     });
 
     tester.on("end", failed => {
+      console.log("end");
       if (failed) {
-        logger.fail(i > 0 && !lastHasError);
+        // logger.fail(i > 0 && !lastHasError);
         lastHasError = true;
       } else {
-        logger.succeed();
-        lastHasError = false;
+        // logger.succeed();
+        // lastHasError = false;
       }
     });
 
@@ -77,4 +84,4 @@ const run = (paths, { ignore }) => {
   exit();
 };
 
-run(cli.input, cli.flags);
+run(["../upstream-reas/src/components/**/index.js"]);
