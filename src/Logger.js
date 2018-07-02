@@ -61,7 +61,6 @@ class Logger {
       chalk.underline(this.path)
     )}`;
 
-    const noop = () => {};
     const repeatString = (s = "", n = 1) => {
       let string = s;
 
@@ -71,12 +70,13 @@ class Logger {
     };
 
     this.loader = {};
-    this.loader.fail = () => Logger.writeln(`❌ ${chalk.red(this.text)}`);
-    this.loader.succeed = () => Logger.writeln(`✔︎ ${chalk.green(this.text)}`);
+    this.loader.fail = () => Logger.writeln(chalk.red(`\r️✘ ${this.text}`));
+    this.loader.succeed = () =>
+      Logger.writeln(chalk.green(`\r✔︎ ${this.text}`));
     this.loader.clear = () =>
-      Logger.writeln(repeatString(" ", process.stdout.columns));
+      Logger.write(`\r${repeatString(" ", process.stdout.columns)}\n`);
 
-    Logger.writeln(this.text);
+    Logger.write(this.text);
   }
 
   addError(message: string) {
