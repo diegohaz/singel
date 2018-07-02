@@ -1,31 +1,16 @@
 #!/usr/bin/env node
 import { resolve, relative, isAbsolute } from "path";
-import meow from "meow";
+import program from "commander";
 import glob from "glob";
 import ReactTester from "./ReactTester";
 import Logger from "./Logger";
 import babelConfig from "./babelConfig";
+import { version } from "../package.json";
 
-const cli = meow(
-  `
-  Usage
-    $ singel <path>
-
-  Options
-    --ignore, -i Ignore paths
-
-  Examples
-    $ singel src/elements/**/*.js
-`,
-  {
-    flags: {
-      ignore: {
-        type: "string",
-        alias: "i"
-      }
-    }
-  }
-);
+program
+  .version(version, "-v, --version")
+  .option("-i, --ignore <path>", "Path to ignore")
+  .parse(process.argv);
 
 const run = (paths, { ignore }) => {
   Logger.writeln();
@@ -42,9 +27,7 @@ const run = (paths, { ignore }) => {
 
   const exit = () => {
     Logger.summary(!lastHasError);
-    if (hasErrors) {
-      process.exit(1);
-    }
+    process.exit(hasErrors ? 1 : 0);
   };
 
   realPaths.forEach((path, i) => {
@@ -77,4 +60,4 @@ const run = (paths, { ignore }) => {
   exit();
 };
 
-run(cli.input, cli.flags);
+run(program.args, program);
