@@ -15,9 +15,12 @@
   },
   "rules": {
     "global-require": "off",
+    "lines-between-class-members": "off",
     "flowtype-errors/show-errors": "error",
     "react/jsx-filename-extension": "off",
     "react/prop-types": "off",
+    "react/destructuring-assignment": "off",
+    "react/jsx-one-expression-per-line": "off",
     "jsx-a11y/alt-text": "off",
     "jsx-a11y/click-events-have-key-events": "off",
     "jsx-a11y/no-static-element-interactions": "off",
