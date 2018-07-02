@@ -1,3 +1,6 @@
 [ignore]
 .*/dist
 .*/coverage
+
+[libs]
+./libdefs.js
