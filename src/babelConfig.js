@@ -1,5 +1,5 @@
-import transformES2015ModulesCommonJS from "babel-plugin-transform-es2015-modules-commonjs";
-import transformRequireStub from "babel-plugin-transform-require-stub";
+process.env.NODE_ENV = "development";
+process.env.BABEL_ENV = "development";
 
 const extensions = [
   "css",
@@ -15,8 +15,9 @@ const extensions = [
 ];
 
 export default {
+  presets: [require.resolve("babel-preset-react-app")],
   plugins: [
-    transformES2015ModulesCommonJS,
-    [transformRequireStub, { extensions }]
+    require.resolve("babel-plugin-transform-es2015-modules-commonjs"),
+    [require.resolve("babel-plugin-transform-require-stub"), { extensions }]
   ]
 };
