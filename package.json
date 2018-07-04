@@ -56,6 +56,7 @@
     "commander": "^2.16.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
+    "find-babel-config": "^1.1.0",
     "glob": "^7.1.2",
     "jsdom": "^11.11.0",
     "known-css-properties": "^0.6.1",

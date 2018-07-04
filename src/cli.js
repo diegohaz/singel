@@ -2,6 +2,7 @@
 import { resolve, relative, isAbsolute } from "path";
 import program from "commander";
 import glob from "glob";
+import findBabelConfig from "find-babel-config";
 import ReactTester from "./ReactTester";
 import Logger from "./Logger";
 import babelConfig from "./babelConfig";
@@ -15,12 +16,17 @@ program
 const run = (paths, { ignore }) => {
   Logger.writeln();
 
-  require("babel-register")(babelConfig);
-
   const realPaths = paths.reduce(
     (acc, path) => [...acc, ...glob.sync(path, { ignore, nodir: true })],
     []
   );
+
+  const { file } = findBabelConfig.sync(realPaths[0]);
+  const finalBabelConfig = file
+    ? { plugins: babelConfig.plugins }
+    : babelConfig;
+
+  require("babel-register")(finalBabelConfig);
 
   let hasErrors = false;
   let lastHasError = false;
