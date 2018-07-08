@@ -43,6 +43,7 @@ const run = (paths, { ignore }) => {
     const tester = new ReactTester(Element);
     const logger = new Logger(Element, relativePath);
 
+    if (logger.validateElement(path) === false) return;
     logger.start();
 
     tester.on("error", message => {
