@@ -59,6 +59,17 @@ class Logger {
     }).start();
   }
 
+  validateElement() {
+    if (this.element === undefined) {
+      Logger.writeln(
+        chalk.red(`ERROR: You are missing a default export in ${this.path}`)
+      );
+      Logger.elementsCount -= 1;
+      return false;
+    }
+    return true;
+  }
+
   addError(message: string) {
     this.errors.push(`  ${chalk.red(message)}`);
     Logger.totalErrorCount += 1;
