@@ -11,7 +11,8 @@ const extensions = [
   "jpg",
   "jpeg",
   "gif",
-  "md"
+  "md",
+  "svg"
 ];
 
 export default {
