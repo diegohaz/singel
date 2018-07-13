@@ -24,6 +24,12 @@ $ npm i -g singel
 $ singel path/to/**/Component.js --ignore "path/to/**/ignored/Component.js"
 ```
 
+## Projects applying Singel
+
+> Feel free to send a PR adding your open source project
+
+- [ReaKit](https://github.com/diegohaz/reakit)
+
 ## Rules
 
 ### Render only one element
