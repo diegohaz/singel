@@ -26,11 +26,13 @@ const { window } = new JSDOM("<!doctype html><html><body></body></html>", {
 
 global.window = window;
 
-Object.keys(window).forEach(key => {
-  if (typeof global[key] === "undefined") {
-    global[key] = window[key];
-  }
-});
+Object.keys(window)
+  .filter(key => ["localStorage", "sessionStorage"].indexOf(key) === -1)
+  .forEach(key => {
+    if (typeof global[key] === "undefined") {
+      global[key] = window[key];
+    }
+  });
 
 class Tester extends EventEmitter {
   element: ComponentType<any>;
