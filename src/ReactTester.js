@@ -20,10 +20,19 @@ import {
 
 configure({ adapter: new Adapter() });
 
-const { window } = new JSDOM("<!doctype html><html><body></body></html>");
+const { window } = new JSDOM("<!doctype html><html><body></body></html>", {
+  pretendToBeVisual: true
+});
+
 global.window = window;
-global.document = window.document;
-global.navigator = window.navigator;
+
+Object.keys(window)
+  .filter(key => ["localStorage", "sessionStorage"].indexOf(key) === -1)
+  .forEach(key => {
+    if (typeof global[key] === "undefined") {
+      global[key] = window[key];
+    }
+  });
 
 class Tester extends EventEmitter {
   element: ComponentType<any>;
