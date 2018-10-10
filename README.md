@@ -28,7 +28,7 @@ $ singel path/to/**/Component.js --ignore "path/to/**/ignored/Component.js"
 
 > Feel free to send a PR adding your open source project
 
-- [ReaKit](https://github.com/diegohaz/reakit)
+- [Reakit](https://github.com/diegohaz/reakit)
 
 ## Rules
 
