@@ -26,7 +26,7 @@ const run = (paths, { ignore }) => {
     ? { plugins: babelConfig.plugins }
     : babelConfig;
 
-  require("babel-register")(finalBabelConfig);
+  require("@babel/register")(finalBabelConfig);
 
   let hasErrors = false;
   let lastHasError = false;
