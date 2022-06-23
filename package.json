@@ -50,7 +50,7 @@
     "enzyme-adapter-react-16": "^1.1.1",
     "find-babel-config": "^1.1.0",
     "glob": "^7.1.2",
-    "jsdom": "^11.12.0",
+    "jsdom": "^16.5.0",
     "known-css-properties": "^0.6.1",
     "lodash": "^4.17.10",
     "ora": "^3.0.0",
